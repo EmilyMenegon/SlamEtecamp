@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Layoutadm from "../../../components/layoutadm";
 
 import {
@@ -94,15 +94,21 @@ export default function Inicioadm() {
     );
   }
 
-  const [regulamento, setRegulamento] = useState(() => {
-    const salvo = localStorage.getItem("regulamento_slam");
-    return salvo || "/regulamento.pdf";
-  });
+  const API_URL = "http://localhost:3001"; 
+  const [nomeRegulamento, setNomeRegulamento] = useState(
+    "Regulamento-Slam-Interescolar.pdf"
+  );
 
-  const [nomeRegulamento, setNomeRegulamento] = useState(() => {
-    const nome = localStorage.getItem("regulamento_nome");
-    return nome || "Regulamento-Slam-Interescolar.pdf";
-  });
+  const [versao, setVersao] = useState(0); // força recarregar o link do PDF
+
+  useEffect(() => {
+    fetch(`${API_URL}/regulamento/info`)
+      .then((r) => r.json())
+      .then((d) => setNomeRegulamento(d.nome))
+      .catch(() => {});
+  }, []);
+
+  const regulamento = `${API_URL}/regulamento/arquivo?v=${versao}`;
 
   const abrirSeletor = () => {
     fileInputRef.current?.click();
@@ -124,15 +130,21 @@ export default function Inicioadm() {
 
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = async () => {
       try {
-        const resultado = reader.result;
+        const resp = await fetch(`${API_URL}/regulamento`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ nome: file.name, documento: reader.result }),
+        });
 
-        localStorage.setItem("regulamento_slam", resultado);
-        localStorage.setItem("regulamento_nome", file.name);
+        if (!resp.ok) throw new Error();
 
-        setRegulamento(resultado);
         setNomeRegulamento(file.name);
+        setVersao((v) => v + 1);
 
         alert("Regulamento atualizado com sucesso!");
       } catch (error) {

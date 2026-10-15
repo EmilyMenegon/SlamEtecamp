@@ -119,7 +119,7 @@ export function listarInscricoes(req, res) {
           WHEN EXISTS (
             SELECT 1
             FROM usuario u
-            JOIN participantes_evento pe
+            JOIN usuario_evento pe
               ON pe.usuario_id = u.id
             WHERE u.inscricao_id = i.id_inscricoes
           )
@@ -130,7 +130,7 @@ export function listarInscricoes(req, res) {
         (
           SELECT e.nome
           FROM usuario u
-          JOIN participantes_evento pe
+          JOIN usuario_evento pe
             ON pe.usuario_id = u.id
           JOIN evento e
             ON e.id_evento = pe.evento_id
@@ -224,7 +224,7 @@ export function excluirInscricao(req, res) {
         SELECT
           pe.id,
           e.nome
-        FROM participantes_evento pe
+        FROM usuario_evento pe
         JOIN evento e
           ON e.id_evento = pe.evento_id
         WHERE pe.usuario_id = ?

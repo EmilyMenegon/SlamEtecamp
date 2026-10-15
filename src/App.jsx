@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
 import TelaInicial from "./pages/inicio/telainicial";
-import Navegacao from "./pages/navegacao";
 import Login from "./pages/login";
 import RotaProtegida from "./components/rota/RotaProtegida";
 
@@ -23,31 +22,14 @@ import TvExibicao from "./pages/adm/tvexibicao";
 
 import Mat from "./pages/mat";
 
-
 export default function App() {
-
   return (
-
     <Routes>
-
-
       {/* Páginas públicas */}
-
       <Route path="/" element={<TelaInicial />} />
       <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/navegacao"
-        element={
-          <RotaProtegida>
-            <Navegacao />
-          </RotaProtegida>
-        }
-      />
-
-
-      {/* USUÁRIO (aluno e poeta) */}
-
+      {/* Usuário: aluno e poeta */}
       <Route
         path="/usuario/home"
         element={
@@ -102,7 +84,7 @@ export default function App() {
         }
       />
 
-        <Route
+      <Route
         path="/usuario/notes"
         element={
           <RotaProtegida tiposPermitidos={["aluno", "poeta"]}>
@@ -111,9 +93,7 @@ export default function App() {
         }
       />
 
-
-      {/* ADMIN (organizador) */}
-
+      {/* Administrador: organizador */}
       <Route
         path="/adm/inscricaoadm"
         element={
@@ -159,11 +139,14 @@ export default function App() {
         }
       />
 
-     <Route 
-     path="/adm/tvexibicao" 
-     element={<RotaProtegida tiposPermitidos={["organizador"]}>
-           <TvExibicao />
-          </RotaProtegida>} />
+      <Route
+        path="/adm/tvexibicao"
+        element={
+          <RotaProtegida tiposPermitidos={["organizador"]}>
+            <TvExibicao />
+          </RotaProtegida>
+        }
+      />
 
       <Route
         path="/adm/muraladm"
@@ -174,9 +157,7 @@ export default function App() {
         }
       />
 
-
-      {/* SISTEMA MAT (matemático) */}
-
+      {/* Sistema MAT: matemático */}
       <Route
         path="/mat"
         element={
@@ -185,9 +166,6 @@ export default function App() {
           </RotaProtegida>
         }
       />
-
-
     </Routes>
-
   );
 }

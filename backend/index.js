@@ -12,6 +12,7 @@ import muralRoutes from "./routes/muralRoutes.js";
 import eventoRoutes from "./routes/eventoRoutes.js";
 import notaRoutes from "./routes/notaRoutes.js";
 import anotacaoRoutes from "./routes/anotacaoRoutes.js";
+import regulamentoRoutes from "./routes/regulamentoRoutes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -107,6 +108,7 @@ const jsonGrande = express.json({ limit: "50mb" });
 app.use("/galeria", jsonGrande);
 app.use("/eventos", jsonGrande);
 app.use("/perfil", jsonGrande);
+app.use("/regulamento", jsonGrande);
 
 // Todas as outras: limite pequeno.
 app.use(express.json({ limit: "100kb" }));
@@ -138,6 +140,7 @@ app.use(muralRoutes);
 app.use(eventoRoutes);
 app.use(notaRoutes);
 app.use(anotacaoRoutes);
+app.use(regulamentoRoutes);
 
 /* ---------- Erros ---------- */
 

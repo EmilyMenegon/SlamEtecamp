@@ -140,24 +140,25 @@ try {
 } catch (err) {
 }
 
-/*
- * NOVA ESTRUTURA:
- *
- * Um poeta pode participar de vários eventos.
- *
- * Exemplo:
- *
- * usuario_id | evento_id
- * -----------|----------
- * 5          | 1
- * 5          | 2
- * 5          | 3
- *
- * Assim o mesmo poeta pode estar na classificatória,
- * semifinal e final.
- */
+// O RENAME precisa vir antes do CREATE TABLE abaixo
+const tabelaAntiga = db
+  .prepare(
+    "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'participantes_evento'"
+  )
+  .get();
+
+const tabelaNova = db
+  .prepare(
+    "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuario_evento'"
+  )
+  .get();
+
+if (tabelaAntiga && !tabelaNova) {
+  db.exec("ALTER TABLE participantes_evento RENAME TO usuario_evento");
+}
+
 db.exec(`
-  CREATE TABLE IF NOT EXISTS participantes_evento (
+  CREATE TABLE IF NOT EXISTS usuario_evento (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     usuario_id INTEGER NOT NULL,
     evento_id INTEGER NOT NULL,
@@ -167,16 +168,10 @@ db.exec(`
   )
 `);
 
-/*
- * Migra os vínculos antigos que estavam em usuario.evento_id
- * para a nova tabela.
- *
- * Isso preserva os participantes que já estavam cadastrados
- * antes desta alteração.
- */
+// Migra os vínculos antigos de usuario.evento_id
 try {
   db.exec(`
-    INSERT OR IGNORE INTO participantes_evento (usuario_id, evento_id)
+    INSERT OR IGNORE INTO usuario_evento (usuario_id, evento_id)
     SELECT id, evento_id
     FROM usuario
     WHERE evento_id IS NOT NULL
@@ -212,16 +207,7 @@ db.exec(`
   )
 `);
 
-/*
- * ANO / DATA DE CRIAÇÃO
- *
- * Bancos criados antes desta alteração não têm "criado_em" em
- * inscricoes e galeria. O SQLite não aceita DEFAULT datetime('now')
- * dentro do ALTER TABLE, então a coluna entra sem default e os
- * registros antigos são preenchidos aqui (com a data de hoje).
- *
- * Os INSERTs dos controllers gravam criado_em explicitamente.
- */
+// Bancos antigos não têm "criado_em" nessas tabelas
 function adicionarCriadoEm(tabela) {
   const colunas = db.prepare(`PRAGMA table_info(${tabela})`).all();
 
@@ -235,5 +221,16 @@ function adicionarCriadoEm(tabela) {
 
 adicionarCriadoEm("inscricoes");
 adicionarCriadoEm("galeria");
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS regulamento (
+    id_regulamento INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    documento TEXT NOT NULL,
+    usuario_id INTEGER NOT NULL,
+    criado_em TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+  )
+`);
 
 export default db;

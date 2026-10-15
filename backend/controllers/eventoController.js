@@ -146,7 +146,7 @@ export function excluirEvento(req, res) {
 
   try {
     db.prepare(
-      "DELETE FROM participantes_evento WHERE evento_id = ?"
+      "DELETE FROM usuario_evento WHERE evento_id = ?"
     ).run(id);
 
     db.prepare(
@@ -184,7 +184,7 @@ export function listarParticipantes(req, res) {
         i.turma,
         i.turno,
         i.curso
-      FROM participantes_evento pe
+      FROM usuario_evento pe
       JOIN usuario u ON u.id = pe.usuario_id
       JOIN inscricoes i ON i.id_inscricoes = u.inscricao_id
       WHERE u.tipo_usuario = 'poeta'
@@ -229,7 +229,7 @@ export function definirParticipantes(req, res) {
     const participantesAtuais = db
       .prepare(`
         SELECT usuario_id
-        FROM participantes_evento
+        FROM usuario_evento
         WHERE evento_id = ?
       `)
       .all(id)
@@ -252,14 +252,14 @@ export function definirParticipantes(req, res) {
     }
 
     db.prepare(
-      "DELETE FROM participantes_evento WHERE evento_id = ?"
+      "DELETE FROM usuario_evento WHERE evento_id = ?"
     ).run(id);
 
     if (idsEnviados.length > 0) {
       const placeholders = idsEnviados.map(() => "?").join(", ");
 
       db.prepare(`
-        INSERT OR IGNORE INTO participantes_evento
+        INSERT OR IGNORE INTO usuario_evento
           (usuario_id, evento_id)
         SELECT id, ?
         FROM usuario
