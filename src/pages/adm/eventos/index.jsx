@@ -16,6 +16,8 @@ import {
   FiAward,
   FiChevronLeft,
   FiChevronRight,
+  FiAlertTriangle,
+  FiCheck,
 } from "react-icons/fi";
 
 import {
@@ -83,12 +85,13 @@ import {
   FormFooter,
   SaveButton,
 
-  DeleteModal,
-  DeleteModalTitle,
-  DeleteModalText,
-  ModalButtons,
-  CancelButton,
-  ConfirmButton,
+  AvisoOverlay,
+  AvisoModal,
+  AvisoIcon,
+  AvisoButton,
+  AvisoActions,
+  AvisoCancelButton,
+  AvisoConfirmButton,
 
   RankingSection,
   RankingHeader,
@@ -136,9 +139,15 @@ async function apiFetch(caminho, opcoes = {}) {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(
+    const erro = new Error(
       data.erro || "Erro ao comunicar com o servidor."
     );
+
+    // Guardamos o status para identificar o aviso de
+    // "poeta com notas" (409) sem depender só do texto.
+    erro.status = res.status;
+
+    throw erro;
   }
 
   return data;
@@ -200,6 +209,10 @@ export default function Eventos() {
 
   const [eventoParaExcluir, setEventoParaExcluir] =
     useState(null);
+
+  // Card de aviso: poeta com notas não pode ser removido.
+  const [avisoNotasAberto, setAvisoNotasAberto] =
+    useState(false);
 
   const [imagem, setImagem] = useState("");
   const [imagemPreview, setImagemPreview] = useState("");
@@ -389,6 +402,40 @@ export default function Eventos() {
   }
 
   /* =====================================================
+     AVISO - POETA COM NOTAS
+  ===================================================== */
+
+  // Fecha o aviso e devolve os checkboxes ao estado real
+  // salvo no servidor (o poeta com notas volta marcado).
+  async function fecharAvisoNotas() {
+    setAvisoNotasAberto(false);
+
+    if (!eventoEditando) return;
+
+    try {
+      const participantes = await apiFetch(
+        `/eventos/${eventoEditando.id}/participantes`
+      );
+
+      setParticipantesSelecionados(
+        participantes.map(
+          (p) => p.usuarioId
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function erroEhPoetaComNotas(err) {
+    if (!err) return false;
+
+    if (err.status === 409) return true;
+
+    return /nota/i.test(err.message || "");
+  }
+
+  /* =====================================================
      IMAGEM
   ===================================================== */
 
@@ -539,6 +586,12 @@ export default function Eventos() {
 
       fecharModal();
     } catch (err) {
+      if (erroEhPoetaComNotas(err)) {
+        setAvisoNotasAberto(true);
+
+        return;
+      }
+
       alert(err.message);
     }
   }
@@ -689,6 +742,13 @@ export default function Eventos() {
         return;
       }
 
+      // Com o aviso aberto, o ESC fecha só o aviso.
+      if (avisoNotasAberto) {
+        fecharAvisoNotas();
+
+        return;
+      }
+
       setModalAberto(false);
 
       setEventoSelecionadoId(null);
@@ -710,7 +770,8 @@ export default function Eventos() {
         "keydown",
         handleKeyDown
       );
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [avisoNotasAberto, eventoEditando]);
 
   /* =====================================================
      JSX
@@ -1683,52 +1744,66 @@ export default function Eventos() {
 
       {/* =================================================
           MODAL EXCLUIR
+          (mesma interface do modal "Sair da conta?")
       ================================================= */}
 
       {modalExcluirAberto && (
-        <ModalOverlay>
-          <DeleteModal>
-            <DeleteModalTitle>
+        <AvisoOverlay
+          onClick={(event) => {
+            if (
+              event.target ===
+              event.currentTarget
+            ) {
+              cancelarExclusao();
+            }
+          }}
+        >
+          <AvisoModal
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="excluir-evento-titulo"
+            aria-describedby="excluir-evento-texto"
+          >
+            <AvisoIcon>
+              <FiTrash2 />
+            </AvisoIcon>
+
+            <h3 id="excluir-evento-titulo">
               Excluir evento
-            </DeleteModalTitle>
+            </h3>
 
-            <DeleteModalText>
-              Tem certeza que deseja
-              excluir esse evento?
-            </DeleteModalText>
+            <p id="excluir-evento-texto">
+              Tem certeza que deseja excluir
+              esse evento? Essa ação não pode
+              ser desfeita.
 
-            {eventoParaExcluir && (
-              <DeleteModalText>
+              {eventoParaExcluir && (
                 <strong>
-                  {
-                    eventoParaExcluir.nome
-                  }
+                  {eventoParaExcluir.nome}
                 </strong>
-              </DeleteModalText>
-            )}
+              )}
+            </p>
 
-            <ModalButtons>
-              <CancelButton
+            <AvisoActions>
+              <AvisoCancelButton
                 type="button"
-                onPointerMove={
+                onClick={cancelarExclusao}
+                onMouseMove={
                   handleButtonMouseMove
-                }
-                onClick={
-                  cancelarExclusao
                 }
               >
                 <span className="buttonContent">
+                  <FiX />
+
                   Cancelar
                 </span>
-              </CancelButton>
+              </AvisoCancelButton>
 
-              <ConfirmButton
+              <AvisoConfirmButton
                 type="button"
-                onPointerMove={
+                onClick={confirmarExclusao}
+                onMouseMove={
                   handleButtonMouseMove
-                }
-                onClick={
-                  confirmarExclusao
                 }
               >
                 <span className="buttonContent">
@@ -1736,10 +1811,64 @@ export default function Eventos() {
 
                   Sim, excluir
                 </span>
-              </ConfirmButton>
-            </ModalButtons>
-          </DeleteModal>
-        </ModalOverlay>
+              </AvisoConfirmButton>
+            </AvisoActions>
+          </AvisoModal>
+        </AvisoOverlay>
+      )}
+
+      {/* =================================================
+          CARD DE AVISO - POETA COM NOTAS
+          (mesma interface do modal "Sair da conta?")
+      ================================================= */}
+
+      {avisoNotasAberto && (
+        <AvisoOverlay
+          onClick={(event) => {
+            if (
+              event.target ===
+              event.currentTarget
+            ) {
+              fecharAvisoNotas();
+            }
+          }}
+        >
+          <AvisoModal
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="aviso-notas-titulo"
+            aria-describedby="aviso-notas-texto"
+          >
+            <AvisoIcon>
+              <FiAlertTriangle />
+            </AvisoIcon>
+
+            <h3 id="aviso-notas-titulo">
+              Remoção não permitida
+            </h3>
+
+            <p id="aviso-notas-texto">
+              Não é possível remover poetas
+              que já possuem notas neste
+              evento.
+            </p>
+
+            <AvisoButton
+              type="button"
+              onClick={fecharAvisoNotas}
+              onMouseMove={
+                handleButtonMouseMove
+              }
+              autoFocus
+            >
+              <span className="buttonContent">
+                <FiCheck />
+
+                Entendi
+              </span>
+            </AvisoButton>
+          </AvisoModal>
+        </AvisoOverlay>
       )}
     </Page>
   );

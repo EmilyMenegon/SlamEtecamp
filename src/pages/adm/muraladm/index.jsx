@@ -53,6 +53,7 @@ import {
   ViewDescription,
   DeleteOverlay,
   DeleteModal,
+  DeleteIcon,
   ModalButtons,
   CancelButton,
   ConfirmButton,
@@ -1063,22 +1064,58 @@ export default function Muraladm() {
 
       {/* =================================================
           EXCLUSÃO
+          (mesma interface do modal "Sair da conta?")
       ================================================= */}
 
       {postParaExcluir && (
 
-        <DeleteOverlay>
+        <DeleteOverlay
+          onClick={(event) => {
 
-          <DeleteModal>
+            if (
+              event.target ===
+              event.currentTarget
+            ) {
 
-            <h3>
+              cancelarExclusao();
+
+            }
+
+          }}
+        >
+
+          <DeleteModal
+            role="alertdialog"
+
+            aria-modal="true"
+
+            aria-labelledby="excluir-recado-titulo"
+
+            aria-describedby="excluir-recado-texto"
+          >
+
+            <DeleteIcon>
+
+              <FiTrash2 />
+
+            </DeleteIcon>
+
+
+            <h3 id="excluir-recado-titulo">
               Excluir recado
             </h3>
 
 
-            <p>
+            <p id="excluir-recado-texto">
               Tem certeza que deseja
-              excluir este recado?
+              excluir este recado? Essa ação
+              não pode ser desfeita.
+
+              {postParaExcluir.titulo && (
+                <strong>
+                  {postParaExcluir.titulo}
+                </strong>
+              )}
             </p>
 
 
@@ -1097,7 +1134,11 @@ export default function Muraladm() {
               >
 
                 <span className="buttonContent">
+
+                  <FiX />
+
                   Cancelar
+
                 </span>
 
               </CancelButton>
@@ -1113,10 +1154,16 @@ export default function Muraladm() {
                 onMouseMove={
                   handleButtonMouseMove
                 }
+
+                autoFocus
               >
 
                 <span className="buttonContent">
-                  Excluir
+
+                  <FiTrash2 />
+
+                  Sim, excluir
+
                 </span>
 
               </ConfirmButton>

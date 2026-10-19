@@ -13,6 +13,8 @@ import {
   FiCalendar,
   FiStar,
   FiFolderPlus,
+  FiAlertTriangle,
+  FiCheck,
 } from "react-icons/fi";
 import {
   Page,
@@ -37,7 +39,6 @@ import {
   EmptyIcon,
   EmptyTitle,
   EmptyText,
-  ErrorMessage,
   FloatingButton,
   AddMenuBackdrop,
   AddMenu,
@@ -50,11 +51,13 @@ import {
   CloseButton,
   NavButton,
   DeleteButton,
-  DeleteModalOverlay,
-  DeleteModal,
-  ModalButtons,
-  CancelButton,
-  ConfirmButton,
+  AvisoOverlay,
+  AvisoModal,
+  AvisoIcon,
+  AvisoButton,
+  AvisoActions,
+  AvisoCancelButton,
+  AvisoConfirmButton,
   YearsWrapper,
   YearsContainer,
   YearArrow,
@@ -121,7 +124,8 @@ function MidiaThumb({ foto, alt }) {
 
 export default function Galeriaadm() {
   const [fotos, setFotos] = useState([]);
-  const [erro, setErro] = useState("");
+  // Card de aviso: { titulo, texto } ou null
+  const [aviso, setAviso] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [carregando, setCarregando] = useState(true);
 
@@ -137,6 +141,10 @@ export default function Galeriaadm() {
   const tipoUploadRef = useRef("album");
 
   const anosVisiveis = Array.from({ length: 3 }, (_, i) => anoInicial + i);
+
+  function mostrarAviso(titulo, texto) {
+    setAviso({ titulo, texto });
+  }
 
   /* ---------- Listas derivadas ---------- */
 
@@ -176,7 +184,10 @@ export default function Galeriaadm() {
         setFotos(Array.isArray(data) ? data : []);
       })
       .catch(() => {
-        setErro("Não foi possível carregar a galeria.");
+        mostrarAviso(
+          "Não foi possível carregar",
+          "Não foi possível carregar a galeria."
+        );
       })
       .finally(() => {
         setCarregando(false);
@@ -215,7 +226,6 @@ export default function Galeriaadm() {
 
     tipoUploadRef.current = tipo;
     setMenuAberto(false);
-    setErro("");
     fileInputRef.current?.click();
   }
 
@@ -225,24 +235,26 @@ export default function Galeriaadm() {
 
     if (!arquivos.length) return;
 
-    let aviso = "";
+    let avisoExcedente = "";
 
     if (fixada) {
       if (vagasFixadas === 0) {
-        setErro(`O limite de ${LIMITE_FIXADAS} imagens fixadas já foi atingido.`);
+        mostrarAviso(
+          "Limite atingido",
+          `O limite de ${LIMITE_FIXADAS} imagens fixadas já foi atingido.`
+        );
         e.target.value = "";
         return;
       }
 
       if (arquivos.length > vagasFixadas) {
         arquivos = arquivos.slice(0, vagasFixadas);
-        aviso = `Só havia ${vagasFixadas} ${
+        avisoExcedente = `Só havia ${vagasFixadas} ${
           vagasFixadas === 1 ? "vaga" : "vagas"
         } para imagens fixadas. Os arquivos excedentes foram ignorados.`;
       }
     }
 
-    setErro("");
     setEnviando(true);
 
     try {
@@ -268,7 +280,10 @@ export default function Galeriaadm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setErro(data.erro || "Erro ao enviar os arquivos.");
+        mostrarAviso(
+          "Não foi possível enviar",
+          data.erro || "Erro ao enviar os arquivos."
+        );
         return;
       }
 
@@ -278,10 +293,14 @@ export default function Galeriaadm() {
       }));
 
       setFotos((prev) => [...novas, ...prev]);
-      if (aviso) setErro(aviso);
+
+      if (avisoExcedente) {
+        mostrarAviso("Alguns arquivos foram ignorados", avisoExcedente);
+      }
     } catch (err) {
       console.error(err);
-      setErro(
+      mostrarAviso(
+        "Não foi possível enviar",
         "Não foi possível enviar os arquivos. Se for um vídeo grande, tente um arquivo menor."
       );
     } finally {
@@ -349,7 +368,10 @@ export default function Galeriaadm() {
         setVisualizando(null);
       }
     } catch {
-      setErro("Não foi possível excluir o arquivo.");
+      mostrarAviso(
+        "Não foi possível excluir",
+        "Não foi possível excluir o arquivo."
+      );
     } finally {
       setImagemParaExcluir(null);
     }
@@ -359,6 +381,12 @@ export default function Galeriaadm() {
 
   useEffect(() => {
     function handleKeyDown(event) {
+      // O aviso tem prioridade sobre todo o resto.
+      if (aviso) {
+        if (event.key === "Escape") setAviso(null);
+        return;
+      }
+
       if (imagemParaExcluir) {
         if (event.key === "Escape") cancelarExclusao();
         return;
@@ -379,7 +407,7 @@ export default function Galeriaadm() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [imagemSelecionada, imagemParaExcluir, visualizando, listaAberta, menuAberto]);
+  }, [aviso, imagemSelecionada, imagemParaExcluir, visualizando, listaAberta, menuAberto]);
 
   /* ---------- Render ---------- */
 
@@ -523,8 +551,6 @@ export default function Galeriaadm() {
             </YearArrow>
           </YearsWrapper>
         </BlocoPagina>
-
-        {erro && <ErrorMessage>{erro}</ErrorMessage>}
 
         <BlocoPagina
           icone={<FiImage />}
@@ -704,42 +730,98 @@ export default function Galeriaadm() {
         </Modal>
       )}
 
+      {/* EXCLUIR ARQUIVO - mesma interface do modal "Sair da conta?" */}
       {imagemParaExcluir && (
-        <DeleteModalOverlay
+        <AvisoOverlay
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               cancelarExclusao();
             }
           }}
         >
-          <DeleteModal>
-            <h3>Excluir arquivo</h3>
+          <AvisoModal
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="excluir-arquivo-titulo"
+            aria-describedby="excluir-arquivo-texto"
+          >
+            <AvisoIcon>
+              <FiTrash2 />
+            </AvisoIcon>
 
-            <p>
+            <h3 id="excluir-arquivo-titulo">Excluir arquivo</h3>
+
+            <p id="excluir-arquivo-texto">
               {ehFixada(imagemParaExcluir)
                 ? "Tem certeza que deseja excluir esta imagem fixada? Ela também deixará de aparecer na tela inicial."
-                : "Tem certeza que deseja excluir este arquivo?"}
+                : "Tem certeza que deseja excluir este arquivo? Essa ação não pode ser desfeita."}
             </p>
 
-            <ModalButtons>
-              <CancelButton
+            <AvisoActions>
+              <AvisoCancelButton
                 type="button"
                 onMouseMove={handleButtonMouseMove}
                 onClick={cancelarExclusao}
               >
-                <span className="buttonContent">Cancelar</span>
-              </CancelButton>
+                <span className="buttonContent">
+                  <FiX />
+                  Cancelar
+                </span>
+              </AvisoCancelButton>
 
-              <ConfirmButton
+              <AvisoConfirmButton
                 type="button"
                 onMouseMove={handleButtonMouseMove}
                 onClick={confirmarExclusao}
+                autoFocus
               >
-                <span className="buttonContent">Sim, excluir</span>
-              </ConfirmButton>
-            </ModalButtons>
-          </DeleteModal>
-        </DeleteModalOverlay>
+                <span className="buttonContent">
+                  <FiTrash2 />
+                  Sim, excluir
+                </span>
+              </AvisoConfirmButton>
+            </AvisoActions>
+          </AvisoModal>
+        </AvisoOverlay>
+      )}
+
+      {/* AVISOS (erros e limites) - mesma interface do modal "Sair da conta?" */}
+      {aviso && (
+        <AvisoOverlay
+          $alto
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setAviso(null);
+            }
+          }}
+        >
+          <AvisoModal
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="aviso-titulo"
+            aria-describedby="aviso-texto"
+          >
+            <AvisoIcon>
+              <FiAlertTriangle />
+            </AvisoIcon>
+
+            <h3 id="aviso-titulo">{aviso.titulo}</h3>
+
+            <p id="aviso-texto">{aviso.texto}</p>
+
+            <AvisoButton
+              type="button"
+              onMouseMove={handleButtonMouseMove}
+              onClick={() => setAviso(null)}
+              autoFocus
+            >
+              <span className="buttonContent">
+                <FiCheck />
+                Entendi
+              </span>
+            </AvisoButton>
+          </AvisoModal>
+        </AvisoOverlay>
       )}
     </Page>
   );

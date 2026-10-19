@@ -6,7 +6,7 @@ import { descobrirAno, ANO_MINIMO } from "../../../utils/ano";
 import {
   FiEdit, FiTrash2, FiUsers, FiBookOpen, FiSearch, FiX,
   FiAlertTriangle, FiDownload, FiChevronLeft, FiChevronRight,
-  FiCalendar, FiClock
+  FiCalendar, FiClock, FiCheck
 } from "react-icons/fi";
 import {
   Page, Content, Header, TitleArea, Title, Subtitle, FilterContainer,
@@ -14,9 +14,11 @@ import {
   TableDescription, DownloadButton, TableWrapper, Table, StudentCell,
   StudentAvatar, StudentInfo, StudentName, Badge, TurnoBadge, Actions,
   ActionButton, EmptyState, EmptyIcon, EmptyTitle, EmptyText, LoadingState,
-  Spinner, ErrorMessage, ModalOverlay, Modal, ModalHeader, ModalTitle,
+  Spinner, ModalOverlay, Modal, ModalHeader, ModalTitle,
   ModalClose, ModalDescription, Form, FormGroup, Label, Input, Select,
-  ModalButtons, SaveButton, CancelButton, ConfirmButton, WarningBox,
+  ModalButtons, SaveButton, CancelButton,
+  AvisoOverlay, AvisoModal, AvisoIcon, AvisoButton, AvisoActions,
+  AvisoCancelButton, AvisoConfirmButton, AvisoField,
   YearsWrapper, YearsContainer, YearArrow, YearCard, YearIcon, YearNumber,
   YearDescription, Bloco, BlocoHeader, BlocoIcone, BlocoInfo, BlocoTitulo,
   BlocoDescricao
@@ -139,7 +141,8 @@ export default function Inscricaoadm() {
   const [turno, setTurno] = useState("Todos");
   const [inscricoes, setInscricoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState("");
+  // Card de aviso: { titulo, texto } ou null
+  const [aviso, setAviso] = useState(null);
   const [inscricaoEditando, setInscricaoEditando] = useState(null);
   const [inscricaoExcluir, setInscricaoExcluir] = useState(null);
   const [confirmacaoExclusao, setConfirmacaoExclusao] = useState("");
@@ -147,13 +150,28 @@ export default function Inscricaoadm() {
   const [anoSelecionado, setAnoSelecionado] = useState(ANO_MINIMO);
   const anosVisiveis = Array.from({ length: 3 }, (_, i) => anoInicial + i);
 
+  function mostrarAviso(titulo, texto) {
+    setAviso({ titulo, texto });
+  }
+
   useEffect(() => {
     buscarInscricoes();
   }, []);
 
+  // ESC fecha primeiro o aviso, depois os modais.
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key !== "Escape") return;
+      if (aviso) { setAviso(null); return; }
+      if (inscricaoExcluir) { fecharModalExclusao(); return; }
+      if (inscricaoEditando) setInscricaoEditando(null);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [aviso, inscricaoExcluir, inscricaoEditando]);
+
   function buscarInscricoes() {
     setCarregando(true);
-    setErro("");
     fetch(`${API_URL}/inscricoes`, { headers: getAuthHeaders() })
       .then((res) => {
         if (!res.ok) throw new Error("Erro ao buscar inscrições.");
@@ -162,7 +180,7 @@ export default function Inscricaoadm() {
       .then((data) => setInscricoes(Array.isArray(data) ? data : []))
       .catch((error) => {
         console.error(error);
-        setErro("Não foi possível carregar as inscrições.");
+        mostrarAviso("Não foi possível carregar", "Não foi possível carregar as inscrições.");
       })
       .finally(() => setCarregando(false));
   }
@@ -202,19 +220,18 @@ export default function Inscricaoadm() {
 
   function baixarPDF() {
     if (!inscricoesFiltradas?.length) {
-      setErro("Não existem alunos inscritos para gerar o PDF.");
+      mostrarAviso("Nada para exportar", "Não existem alunos inscritos para gerar o PDF.");
       return;
     }
     try {
       gerarPDF({ alunos: inscricoesFiltradas, anoSelecionado, turno });
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      setErro("Não foi possível gerar o PDF.");
+      mostrarAviso("Não foi possível gerar o PDF", "Não foi possível gerar o PDF.");
     }
   }
 
   function abrirEdicao(inscricao) {
-    setErro("");
     setInscricaoEditando({ ...inscricao });
   }
 
@@ -238,7 +255,7 @@ export default function Inscricaoadm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setErro(data.erro || "Erro ao salvar alterações.");
+        mostrarAviso("Não foi possível salvar", data.erro || "Erro ao salvar alterações.");
         return;
       }
 
@@ -246,16 +263,18 @@ export default function Inscricaoadm() {
       setInscricaoEditando(null);
     } catch (err) {
       console.error(err);
-      setErro("Não foi possível conectar ao servidor.");
+      mostrarAviso("Sem conexão", "Não foi possível conectar ao servidor.");
     }
   }
 
   function abrirExclusao(inscricao) {
     if (inscricao.atribuido_evento) {
-      setErro(`Não é possível excluir ${inscricao.nome_poeta} porque o poeta já está atribuído ao evento "${inscricao.evento_nome}".`);
+      mostrarAviso(
+        "Exclusão não permitida",
+        `Não é possível excluir ${inscricao.nome_poeta} porque o poeta já está atribuído ao evento "${inscricao.evento_nome}".`
+      );
       return;
     }
-    setErro("");
     setInscricaoExcluir(inscricao);
     setConfirmacaoExclusao("");
   }
@@ -275,7 +294,7 @@ export default function Inscricaoadm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setErro(data.erro || "Erro ao excluir inscrição.");
+        mostrarAviso("Não foi possível excluir", data.erro || "Erro ao excluir inscrição.");
         return;
       }
 
@@ -283,7 +302,7 @@ export default function Inscricaoadm() {
       fecharModalExclusao();
     } catch (err) {
       console.error(err);
-      setErro("Não foi possível conectar ao servidor.");
+      mostrarAviso("Sem conexão", "Não foi possível conectar ao servidor.");
     }
   }
 
@@ -330,8 +349,6 @@ export default function Inscricaoadm() {
             ))}
           </FilterContainer>
         </BlocoPagina>
-
-        {erro && <ErrorMessage>{erro}</ErrorMessage>}
 
         <TableContainer>
           <TableHeader>
@@ -438,39 +455,58 @@ export default function Inscricaoadm() {
         </ModalOverlay>
       )}
 
+      {/* EXCLUIR INSCRIÇÃO - mesma interface do modal "Sair da conta?" */}
       {inscricaoExcluir && (
-        <ModalOverlay onMouseDown={(e) => { if (e.target === e.currentTarget) fecharModalExclusao(); }}>
-          <Modal>
-            <ModalHeader>
-              <div>
-                <ModalTitle $danger>Excluir inscrição</ModalTitle>
-                <ModalDescription>Esta ação precisa ser confirmada.</ModalDescription>
-              </div>
-              <ModalClose type="button" onClick={fecharModalExclusao} onMouseMove={handleButtonMouseMove} aria-label="Fechar"><FiX /></ModalClose>
-            </ModalHeader>
+        <AvisoOverlay onMouseDown={(e) => { if (e.target === e.currentTarget) fecharModalExclusao(); }}>
+          <AvisoModal role="alertdialog" aria-modal="true" aria-labelledby="excluir-inscricao-titulo" aria-describedby="excluir-inscricao-texto">
+            <AvisoIcon><FiTrash2 /></AvisoIcon>
 
-            <WarningBox>
-              <FiAlertTriangle />
-              <div>
-                <strong>Atenção</strong>
-                <p>Você está prestes a excluir a inscrição de <strong>{inscricaoExcluir.nome_poeta}</strong>. O usuário voltará a ser aluno comum.</p>
-              </div>
-            </WarningBox>
+            <h3 id="excluir-inscricao-titulo">Excluir inscrição</h3>
 
-            <Form>
-              <FormGroup>
-                <Label>Digite <strong>excluir</strong> para confirmar</Label>
-                <Input value={confirmacaoExclusao} onChange={(e) => setConfirmacaoExclusao(e.target.value)} placeholder="Digite excluir" autoFocus />
-              </FormGroup>
-              <ModalButtons>
-                <CancelButton type="button" onClick={fecharModalExclusao}>Cancelar</CancelButton>
-                <ConfirmButton type="button" onClick={excluirInscricao} onMouseMove={handleButtonMouseMove} disabled={confirmacaoExclusao.toLowerCase() !== "excluir"}>
-                  <FiTrash2 />Excluir inscrição
-                </ConfirmButton>
-              </ModalButtons>
-            </Form>
-          </Modal>
-        </ModalOverlay>
+            <p id="excluir-inscricao-texto">
+              Você está prestes a excluir a inscrição de <strong>{inscricaoExcluir.nome_poeta}</strong>. O usuário voltará a ser aluno comum.
+            </p>
+
+            <AvisoField>
+              <Label htmlFor="confirmar-exclusao">Digite <strong>excluir</strong> para confirmar</Label>
+              <Input
+                id="confirmar-exclusao"
+                value={confirmacaoExclusao}
+                onChange={(e) => setConfirmacaoExclusao(e.target.value)}
+                placeholder="Digite excluir"
+                autoComplete="off"
+                autoFocus
+              />
+            </AvisoField>
+
+            <AvisoActions>
+              <AvisoCancelButton type="button" onClick={fecharModalExclusao} onMouseMove={handleButtonMouseMove}>
+                <span className="buttonContent"><FiX />Cancelar</span>
+              </AvisoCancelButton>
+
+              <AvisoConfirmButton type="button" onClick={excluirInscricao} onMouseMove={handleButtonMouseMove} disabled={confirmacaoExclusao.toLowerCase() !== "excluir"}>
+                <span className="buttonContent"><FiTrash2 />Sim, excluir</span>
+              </AvisoConfirmButton>
+            </AvisoActions>
+          </AvisoModal>
+        </AvisoOverlay>
+      )}
+
+      {/* AVISOS (erros e bloqueios) - mesma interface do modal "Sair da conta?" */}
+      {aviso && (
+        <AvisoOverlay onMouseDown={(e) => { if (e.target === e.currentTarget) setAviso(null); }}>
+          <AvisoModal role="alertdialog" aria-modal="true" aria-labelledby="aviso-titulo" aria-describedby="aviso-texto">
+            <AvisoIcon><FiAlertTriangle /></AvisoIcon>
+
+            <h3 id="aviso-titulo">{aviso.titulo}</h3>
+
+            <p id="aviso-texto">{aviso.texto}</p>
+
+            <AvisoButton type="button" onClick={() => setAviso(null)} onMouseMove={handleButtonMouseMove} autoFocus>
+              <span className="buttonContent"><FiCheck />Entendi</span>
+            </AvisoButton>
+          </AvisoModal>
+        </AvisoOverlay>
       )}
     </Page>
   );
