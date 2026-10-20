@@ -1,6 +1,29 @@
-import styled,{keyframes}from"styled-components";
+
+import styled,{keyframes,css}from"styled-components";
  
 const COLORS={primary:"#831614",primaryDark:"#65100f",yellow:"#ffdb53",yellowDark:"#e3b900",background:"#fff",white:"#ffffff",text:"#1c1c1c",muted:"#777777",border:"#d8d8d8",danger:"#d62828",dangerDark:"#b71c1c",cream:"#fff7d0",gray:"#666666"};
+ 
+/* =====================================================
+   ANIMAÇÃO PADRÃO DOS BOTÕES
+   Igual à dos cards de "Ano das inscrições":
+   - borda 2px (#eee) que vira vinho no hover
+   - botão sobe 8px com sombra
+   - bolinha amarela cresce a partir do mouse
+===================================================== */
+ 
+const botaoBase=css`
+position:relative;overflow:hidden;isolation:isolate;cursor:pointer;font-family:inherit;box-sizing:border-box;border:2px solid #eee;
+transition:transform .3s cubic-bezier(.22,1,.36,1),border-color .25s ease,background .25s ease,box-shadow .3s ease,color .25s ease,opacity .2s ease;
+&:disabled{opacity:.4;cursor:not-allowed}
+`;
+ 
+const botaoAnimado=(tamanho=35,escala=11)=>css`
+&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:${tamanho}px;height:${tamanho}px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);transition:transform .65s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
+&:hover:not(:disabled){transform:translateY(-8px);border-color:${COLORS.primary};box-shadow:0 18px 35px rgba(131,22,20,.16)}
+&:hover:not(:disabled)::before{transform:translate(-50%,-50%) scale(${escala})}
+&:active:not(:disabled){transform:translateY(-3px) scale(.98)}
+&:focus-visible{outline:3px solid ${COLORS.yellow};outline-offset:4px}
+`;
  
 export const Page=styled.div`
 min-height:100vh;width:100%;background:#fff;color:${COLORS.text};font-family:"Poppins",sans-serif;box-sizing:border-box;overflow-x:hidden;
@@ -83,13 +106,12 @@ margin:0;color:#777;font-size:16px;line-height:1.45;
 `;
  
 export const DownloadButton=styled.button`
-position:relative;min-height:48px;padding:0 19px;display:inline-flex;align-items:center;justify-content:center;gap:9px;flex-shrink:0;border:2px solid ${COLORS.primary};border-radius:9px;background:${COLORS.primary};color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;overflow:hidden;isolation:isolate;transition:color .25s ease,transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:18px;height:18px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
+${botaoBase}
+min-height:48px;padding:0 19px;display:inline-flex;align-items:center;justify-content:center;gap:9px;flex-shrink:0;border-color:${COLORS.primary};border-radius:9px;background:${COLORS.primary};color:#fff;font-size:15px;font-weight:700;
+${botaoAnimado(30,13)}
 svg{position:relative;z-index:2;width:19px;height:19px;flex-shrink:0;stroke-width:2.3}
 span{position:relative;z-index:2}
-&:hover{color:#111;transform:translateY(-2px);box-shadow:0 8px 18px rgba(131,22,20,.2);&::before{transform:translate(-50%,-50%) scale(14)}}
-&:active{transform:scale(.97)}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:3px}
+&:hover:not(:disabled){color:#111}
 @media(max-width:600px){min-height:40px;padding:0 11px;font-size:13px;gap:6px;span{display:none}svg{width:18px;height:18px}}
 `;
  
@@ -154,15 +176,15 @@ display:flex;align-items:center;justify-content:center;gap:14px;
 `;
  
 export const ActionButton=styled.button`
-position:relative;width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:50%;color:${({$variant})=>$variant==="delete"?"#d62828":"#831614"};cursor:pointer;overflow:hidden;isolation:isolate;appearance:none;transition:color .25s ease,transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:10px;height:10px;border-radius:50%;background:${({$variant})=>$variant==="delete"?"#111":COLORS.yellow};transform:translate(-50%,-50%) scale(0);transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
+${botaoBase}
+width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:50%;color:${({$variant})=>$variant==="delete"?COLORS.danger:COLORS.primary};appearance:none;
+${botaoAnimado(12,7)}
+&::before{background:${({$variant})=>$variant==="delete"?"#111":COLORS.yellow}}
 svg{position:relative;z-index:2;width:21px;height:21px;stroke-width:2}
-&:hover{color:${({$variant})=>$variant==="delete"?"#fff":"#111"};transform:translateY(-2px) scale(1.08);box-shadow:0 7px 16px rgba(0,0,0,.16);&::before{transform:translate(-50%,-50%) scale(5)}}
-&:active{transform:scale(.9)}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:3px}
-&:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+&:hover:not(:disabled){color:${({$variant})=>$variant==="delete"?"#fff":"#111"};border-color:${({$variant})=>$variant==="delete"?COLORS.danger:COLORS.primary}}
+&:disabled{opacity:.35;transform:none;box-shadow:none}
 &:disabled::before{display:none}
-@media(max-width:600px){width:31px;height:31px;svg{width:17px;height:17px}}
+@media(max-width:600px){width:36px;height:36px;svg{width:17px;height:17px}}
 `;
  
 export const EmptyState=styled.div`
@@ -208,11 +230,11 @@ margin:0;color:#777;font-size:15px;line-height:1.6;
 `;
  
 export const ModalClose=styled.button`
-position:relative;width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;border:none;background:transparent;color:#888;border-radius:50%;cursor:pointer;overflow:hidden;isolation:isolate;transition:color .25s ease,transform .25s ease,box-shadow .25s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:10px;height:10px;border-radius:50%;background:#eee;transform:translate(-50%,-50%) scale(0);transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
+${botaoBase}
+width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;background:#fff;color:#888;border-radius:50%;
+${botaoAnimado(12,7)}
 svg{position:relative;z-index:2;width:19px;height:19px}
-&:hover{color:#222;transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.12);&::before{transform:translate(-50%,-50%) scale(5)}}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:2px}
+&:hover:not(:disabled){color:#111}
 `;
  
 export const Form=styled.div`
@@ -245,20 +267,18 @@ display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:9px
 `;
  
 export const SaveButton=styled.button`
-position:relative;min-height:47px;padding:0 21px;border:none;border-radius:9px;background:${COLORS.primary};color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;overflow:hidden;isolation:isolate;transition:color .25s ease,transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:20px;height:20px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
-&:hover{color:#111;transform:translateY(-2px);box-shadow:0 8px 18px rgba(131,22,20,.2);&::before{transform:translate(-50%,-50%) scale(15)}}
-&:active{transform:scale(.97)}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:2px}
+${botaoBase}
+min-height:50px;padding:0 21px;border-color:${COLORS.primary};border-radius:9px;background:${COLORS.primary};color:#fff;font-size:15px;font-weight:700;
+${botaoAnimado(30,12)}
+&:hover:not(:disabled){color:#111}
 @media(max-width:430px){width:100%}
 `;
  
 export const CancelButton=styled.button`
-position:relative;min-height:47px;padding:0 20px;border:1px solid #cfcfcf;border-radius:9px;background:#fff;color:#555;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;overflow:hidden;isolation:isolate;transition:color .25s ease,transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:20px;height:20px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
-&:hover{color:#111;border-color:${COLORS.yellow};transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.12);&::before{transform:translate(-50%,-50%) scale(15)}}
-&:active{transform:scale(.97)}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:2px}
+${botaoBase}
+min-height:50px;padding:0 20px;border-radius:9px;background:#fff;color:#555;font-size:15px;font-weight:600;
+${botaoAnimado(30,12)}
+&:hover:not(:disabled){color:#111}
 @media(max-width:430px){width:100%}
 `;
  
@@ -308,26 +328,20 @@ position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%
 `;
  
 export const AvisoButton=styled.button`
-position:relative;width:100%;height:60px;border:0;border-radius:15px;background:${COLORS.primary};color:${COLORS.white};font-family:"Poppins",sans-serif;font-size:.98rem;font-weight:700;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .25s ease,color .3s ease,box-shadow .3s ease,opacity .2s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:30px;height:30px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);z-index:0;pointer-events:none;transition:transform .55s cubic-bezier(.16,1,.3,1)}
+${botaoBase}
+width:100%;height:60px;border-color:${COLORS.primary};border-radius:15px;background:${COLORS.primary};color:${COLORS.white};font-family:"Poppins",sans-serif;font-size:.98rem;font-weight:700;
+${botaoAnimado(35,14)}
 .buttonContent{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:9px}
-&:hover:not(:disabled){color:#010000;transform:translateY(-2px);box-shadow:0 9px 22px rgba(131,22,20,.2)}
-&:hover:not(:disabled)::before{transform:translate(-50%,-50%) scale(10)}
-&:active:not(:disabled){transform:scale(.97)}
-&:disabled{opacity:.4;cursor:not-allowed}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:3px}
+&:hover:not(:disabled){color:#010000}
 `;
  
 export const AvisoConfirmButton=styled(AvisoButton)``;
  
 export const AvisoCancelButton=styled.button`
-position:relative;width:100%;height:60px;border:2px solid ${COLORS.yellow};border-radius:15px;background:${COLORS.white};color:#010000;font-family:"Poppins",sans-serif;font-size:.98rem;font-weight:700;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .25s ease,color .3s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:30px;height:30px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);z-index:0;pointer-events:none;transition:transform .55s cubic-bezier(.16,1,.3,1)}
+${botaoBase}
+width:100%;height:60px;border-radius:15px;background:${COLORS.white};color:#010000;font-family:"Poppins",sans-serif;font-size:.98rem;font-weight:700;
+${botaoAnimado(35,14)}
 .buttonContent{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:9px}
-&:hover{transform:translateY(-2px)}
-&:hover::before{transform:translate(-50%,-50%) scale(10)}
-&:active{transform:scale(.97)}
-&:focus-visible{outline:2px solid ${COLORS.primary};outline-offset:3px}
 `;
  
 /* =====================================================
@@ -349,15 +363,14 @@ width:100%;max-width:1000px;display:grid;grid-template-columns:repeat(3,minmax(0
 `;
  
 export const YearArrow=styled.button`
-position:relative;width:46px;height:46px;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;border:none;border-radius:12px;background:${COLORS.primary};color:#fff;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s ease,opacity .2s ease;
-&::before{content:"";position:absolute;left:var(--mouse-x,50%);top:var(--mouse-y,50%);width:18px;height:18px;border-radius:50%;background:${COLORS.yellow};transform:translate(-50%,-50%) scale(0);transition:transform .55s cubic-bezier(.16,1,.3,1);z-index:-1;pointer-events:none}
+${botaoBase}
+width:50px;height:50px;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;border-color:${COLORS.primary};border-radius:12px;background:${COLORS.primary};color:#fff;
+${botaoAnimado(20,8)}
 svg{position:relative;z-index:2;width:21px;height:21px;stroke-width:2.5}
-&:hover:not(:disabled){color:#111;transform:translateY(-2px);box-shadow:0 8px 18px rgba(131,22,20,.2);&::before{transform:translate(-50%,-50%) scale(8)}}
-&:active:not(:disabled){transform:scale(.94)}
-&:disabled{opacity:.25;cursor:not-allowed;box-shadow:none}
-&:focus-visible{outline:2px solid ${COLORS.yellow};outline-offset:3px}
-@media(max-width:700px){width:38px;height:38px;border-radius:10px;svg{width:18px;height:18px}}
-@media(max-width:430px){width:32px;height:32px;border-radius:8px;svg{width:16px;height:16px}}
+&:hover:not(:disabled){color:#111}
+&:disabled{opacity:.25;box-shadow:none}
+@media(max-width:700px){width:40px;height:40px;border-radius:10px;svg{width:18px;height:18px}}
+@media(max-width:430px){width:34px;height:34px;border-radius:8px;svg{width:16px;height:16px}}
 `;
  
 export const YearCard=styled.button`

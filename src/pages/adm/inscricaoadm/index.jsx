@@ -357,7 +357,7 @@ export default function Inscricaoadm() {
               <TableDescription>Lista de alunos inscritos no ano selecionado.</TableDescription>
             </TableHeaderInfo>
             <DownloadButton type="button" onClick={baixarPDF} onMouseMove={handleButtonMouseMove}>
-              <FiDownload />Baixar PDF
+              <FiDownload /><span>Baixar PDF</span>
             </DownloadButton>
           </TableHeader>
 
@@ -447,7 +447,7 @@ export default function Inscricaoadm() {
                 <Input value={inscricaoEditando.curso || ""} onChange={(e) => alterarCampoEdicao("curso", e.target.value)} />
               </FormGroup>
               <ModalButtons>
-                <CancelButton type="button" onClick={() => setInscricaoEditando(null)}>Cancelar</CancelButton>
+                <CancelButton type="button" onClick={() => setInscricaoEditando(null)} onMouseMove={handleButtonMouseMove}>Cancelar</CancelButton>
                 <SaveButton type="button" onClick={salvarEdicao} onMouseMove={handleButtonMouseMove}>Salvar alterações</SaveButton>
               </ModalButtons>
             </Form>
