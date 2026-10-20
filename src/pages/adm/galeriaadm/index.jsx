@@ -666,6 +666,7 @@ export default function Galeriaadm() {
           <ModalContent>
             <CloseButton
               type="button"
+              onMouseMove={handleButtonMouseMove}
               onClick={fecharImagem}
               aria-label="Fechar visualização"
               title="Fechar"

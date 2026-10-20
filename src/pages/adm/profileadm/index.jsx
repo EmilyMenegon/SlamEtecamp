@@ -345,7 +345,11 @@ export default function Profileadm() {
             </SaveButton>
           </Form>
 
-          <LogoutLink type="button" onClick={() => setShowLogoutModal(true)}>
+          <LogoutLink
+            type="button"
+            onClick={() => setShowLogoutModal(true)}
+            onMouseMove={handleButtonMouseMove}
+          >
             <FaSignOutAlt />
             Sair da conta
           </LogoutLink>
