@@ -1,6 +1,5 @@
-
 import styled, { createGlobalStyle, css, keyframes } from "styled-components";
- 
+
 export const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: "Lost in South";
@@ -10,36 +9,54 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
     font-display: swap;
   }
- 
+
   html, body, #root {
     margin: 0 !important;
     padding: 0 !important;
     width: 100%;
     min-height: 100%;
   }
- 
+
   html, body {
     overflow-x: hidden;
   }
- 
+
   body {
     background: #fff;
     font-family: "Poppins", sans-serif;
   }
- 
+
   *, *::before, *::after {
     box-sizing: border-box;
   }
- 
+
   button, input, textarea, select {
     font-family: inherit;
   }
- 
+
   img, svg, video {
     max-width: 100%;
   }
+
+  /* ---------- LENIS (scroll suave) ---------- */
+
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
 `;
- 
+
 export const Page = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -48,7 +65,7 @@ export const Page = styled.div`
   overflow-x: hidden;
   position: relative;
 `;
- 
+
 export const HeroWrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -58,7 +75,7 @@ export const HeroWrapper = styled.div`
   background: #fff;
   overflow: hidden;
 `;
- 
+
 export const Hero = styled.section`
   width: 100%;
   height: 100vh;
@@ -68,7 +85,7 @@ export const Hero = styled.section`
   flex-direction: column;
   overflow: hidden;
 `;
- 
+
 export const Header = styled.header`
   width: 90%;
   margin: 25px auto 0;
@@ -77,40 +94,40 @@ export const Header = styled.header`
   justify-content: space-between;
   position: relative;
   z-index: 20;
- 
+
   @media (max-width: 768px) {
     width: 92%;
     margin-top: 20px;
   }
 `;
- 
+
 export const Logo = styled.div`
   width: 150px;
- 
+
   img {
     width: 100%;
     display: block;
   }
- 
+
   @media (max-width: 768px) {
     width: 90px;
   }
 `;
- 
+
 export const HeaderBar = styled.div`
   display: none;
 `;
- 
+
 export const SocialIcons = styled.div`
   display: flex;
   align-items: center;
   gap: 18px;
- 
+
   @media (max-width: 768px) {
     gap: 12px;
   }
 `;
- 
+
 export const SocialIcon = styled.a`
   display: flex;
   align-items: center;
@@ -119,17 +136,17 @@ export const SocialIcon = styled.a`
   font-size: 2.3rem;
   text-decoration: none;
   transition: 0.25s ease;
- 
+
   &:hover {
     color: #831614;
     transform: translateY(-3px);
   }
- 
+
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
- 
+
 export const Container = styled.main`
   width: 85%;
   flex: 1;
@@ -142,7 +159,7 @@ export const Container = styled.main`
   gap: 50px;
   position: relative;
   z-index: 2;
- 
+
   @media (max-width: 768px) {
     width: 90%;
     margin-top: 25px;
@@ -151,19 +168,19 @@ export const Container = styled.main`
     text-align: center;
   }
 `;
- 
+
 export const LeftSide = styled.div`
   width: 48%;
   display: flex;
   flex-direction: column;
   justify-content: center;
- 
+
   @media (max-width: 768px) {
     width: 100%;
     align-items: center;
   }
 `;
- 
+
 export const BigText = styled.h1`
   padding: 20px;
   margin: 0 0 0px;
@@ -171,7 +188,7 @@ export const BigText = styled.h1`
   font-size: clamp(2.5rem, 4vw, 4.5rem);
   line-height: 1.15;
   font-weight: 900;
- 
+
   span {
     padding: 10px;
     color: #ffdb53;
@@ -179,40 +196,44 @@ export const BigText = styled.h1`
     font-weight: 400;
     font-size: 1.2em;
   }
- 
+
   @media (max-width: 768px) {
     font-size: 2.2rem;
   }
- 
+
   @media (max-width: 480px) {
     font-size: 1.9rem;
   }
 `;
- 
+
 export const SmallText = styled.p`
   width: 85%;
   margin: 0 0 30px;
+  /* mesmo recuo lateral do BigText para alinhar com o título */
+  padding: 0 20px;
   color: #777;
   font-size: 1.55rem;
   line-height: 1.7;
- 
+
   @media (max-width: 768px) {
     width: 100%;
   }
 `;
- 
+
 export const Buttons = styled.div`
   display: flex;
- 
+  /* mesmo recuo lateral do BigText para alinhar com o título */
+  padding: 0 20px;
+
   a {
     text-decoration: none;
   }
- 
+
   @media (max-width: 768px) {
     justify-content: center;
   }
 `;
- 
+
 export const PrimaryButton = styled.button`
   position: relative;
   min-height: 76px;
@@ -227,7 +248,7 @@ export const PrimaryButton = styled.button`
   overflow: hidden;
   isolation: isolate;
   transition: 0.3s ease;
- 
+
   &::before {
     content: "";
     position: absolute;
@@ -241,7 +262,7 @@ export const PrimaryButton = styled.button`
     transition: transform 0.65s ease;
     z-index: 0;
   }
- 
+
   .button-content {
     position: relative;
     z-index: 2;
@@ -249,37 +270,37 @@ export const PrimaryButton = styled.button`
     align-items: center;
     gap: 12px;
   }
- 
+
   &:hover {
     color: #fff;
     transform: translateY(-3px);
   }
- 
+
   &:hover::before {
     transform: translate(-50%, -50%) scale(18);
   }
- 
+
   svg {
     transition: 0.3s ease;
   }
- 
+
   &:hover svg {
     transform: translateX(6px);
   }
 `;
- 
+
 export const ImageBox = styled.div`
   width: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
- 
+
   @media (max-width: 768px) {
     display: none;
   }
 `;
- 
+
 export const Image = styled.img`
   width: 100%;
   max-width: 750px;
@@ -287,7 +308,7 @@ export const Image = styled.img`
   position: relative;
   z-index: 2;
 `;
- 
+
 export const Circle = styled.span`
   position: absolute;
   width: ${({ $size }) => $size || "50px"};
@@ -299,44 +320,44 @@ export const Circle = styled.span`
   border-radius: 50%;
   background: #ffdb53;
   z-index: 1;
- 
+
   @media (max-width: 768px) {
     display: none;
   }
 `;
- 
+
 export const PixelImage = styled.img`
   position: absolute;
   object-fit: contain;
   pointer-events: none;
   z-index: 3;
- 
+
   &.hero-pixel-01 {
     width: 150px;
     height: 100px;
     top: -15%;
     left: 16%;
   }
- 
+
   &.hero-pixel-02 {
     width: 150px;
     height: 100px;
     top: 27%;
     right: -7%;
   }
- 
+
   &.hero-pixel-03 {
     width: 150px;
     height: 120px;
     bottom: -20%;
     left: 16%;
   }
- 
+
   @media (max-width: 768px) {
     display: none;
   }
 `;
- 
+
 export const MarqueeSection = styled.section`
   width: 100%;
   height: 180px;
@@ -349,7 +370,7 @@ export const MarqueeSection = styled.section`
   align-items: center;
   background: #ffdb53;
 `;
- 
+
 export const InkPaint = styled.div`
   position: absolute;
   left: 0;
@@ -360,7 +381,7 @@ export const InkPaint = styled.div`
   z-index: 50;
   pointer-events: none;
 `;
- 
+
 export const MarqueeReveal = styled.div`
   width: 100%;
   height: 180px;
@@ -370,7 +391,7 @@ export const MarqueeReveal = styled.div`
   position: relative;
   z-index: 31;
 `;
- 
+
 export const MarqueeTrack = styled.div`
   display: flex;
   align-items: center;
@@ -379,7 +400,7 @@ export const MarqueeTrack = styled.div`
   height: 180px;
   will-change: transform;
 `;
- 
+
 export const Phrase = styled.span`
   flex-shrink: 0;
   margin: 0 10px;
@@ -388,7 +409,7 @@ export const Phrase = styled.span`
   font-weight: 800;
   white-space: nowrap;
 `;
- 
+
 export const AnimatedImage = styled.img`
   width: 180px;
   height: 110px;
@@ -397,7 +418,7 @@ export const AnimatedImage = styled.img`
   margin: 0 20px;
   flex-shrink: 0;
 `;
- 
+
 export const AboutSection = styled.section`
   width: 100%;
   background: #f5f5f5;
@@ -405,7 +426,7 @@ export const AboutSection = styled.section`
   position: relative;
   z-index: 12;
 `;
- 
+
 export const AboutTitle = styled.h2`
   font-family: inherit;
   font-weight: 900;
@@ -413,7 +434,7 @@ export const AboutTitle = styled.h2`
   text-align: center;
   color: #111;
   font-size: clamp(3.2rem, 4vw, 5.2rem);
- 
+
   span {
     padding: 10px;
     color: #ffdb53;
@@ -422,7 +443,7 @@ export const AboutTitle = styled.h2`
     font-size: 1.2em;
   }
 `;
- 
+
 export const AboutContainer = styled.div`
   width: 82%;
   max-width: 1200px;
@@ -431,43 +452,43 @@ export const AboutContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 70px;
- 
+
   @media (max-width: 900px) {
     width: 90%;
     grid-template-columns: 1fr;
   }
 `;
- 
+
 export const AboutContent = styled.div`
   width: 100%;
 `;
- 
+
 export const AboutText = styled.p`
   margin: 0;
   color: #111;
   font-size: 1.3rem;
   line-height: 1.75;
   text-align: justify;
- 
+
   b {
     color: #111;
     font-weight: 800;
   }
- 
+
   @media (max-width: 768px) {
     font-size: 1rem;
     line-height: 1.6;
   }
- 
+
   @media (max-width: 480px) {
     font-size: 0.9rem;
     line-height: 1.55;
   }
 `;
- 
+
 export const AboutFindBox = styled.div`
   margin-top: 35px;
- 
+
   h3 {
     margin: 0 0 18px;
     color: #111;
@@ -475,13 +496,13 @@ export const AboutFindBox = styled.div`
     font-weight: 900;
   }
 `;
- 
+
 export const AboutWords = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 `;
- 
+
 export const AboutWord = styled.span`
   position: relative;
   padding: 8px 14px;
@@ -491,7 +512,7 @@ export const AboutWord = styled.span`
   font-size: 1rem;
   font-weight: 800;
   transition: 0.2s ease;
- 
+
   ${({ $found }) =>
     $found &&
     `
@@ -508,7 +529,7 @@ export const AboutWord = styled.span`
       }
     `}
 `;
- 
+
 export const AboutGame = styled.div`
   width: 100%;
   display: flex;
@@ -516,7 +537,7 @@ export const AboutGame = styled.div`
   align-items: center;
   position: relative;
 `;
- 
+
 export const AboutBoard = styled.div`
   width: min(100%, 680px);
   aspect-ratio: 1;
@@ -529,7 +550,7 @@ export const AboutBoard = styled.div`
   position: relative;
   overflow: hidden;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
- 
+
   ${({ $completed }) =>
     $completed &&
     `
@@ -538,7 +559,7 @@ export const AboutBoard = styled.div`
         0 12px 30px rgba(0, 0, 0, 0.18);
     `}
 `;
- 
+
 export const GameFeedback = styled.div`
   position: absolute;
   left: 50%;
@@ -558,12 +579,12 @@ export const GameFeedback = styled.div`
   text-align: center;
   pointer-events: none;
 `;
- 
+
 export const AboutRow = styled.div`
   display: flex;
   width: 100%;
 `;
- 
+
 export const AboutLetter = styled.button`
   width: 8%;
   aspect-ratio: 1;
@@ -578,14 +599,14 @@ export const AboutLetter = styled.button`
   font-weight: 800;
   cursor: pointer;
   transition: 0.2s ease;
- 
+
   &:hover {
     background: #831614;
     color: #fff;
     transform: scale(1.08);
   }
 `;
- 
+
 export const FeaturesSection = styled.section`
   width: 100%;
   background: #fff;
@@ -594,7 +615,7 @@ export const FeaturesSection = styled.section`
   padding: 70px 0 110px !important;
   overflow: visible;
 `;
- 
+
 export const SectionTitle = styled.h2`
   font-family: inherit;
   font-weight: 900;
@@ -604,10 +625,10 @@ export const SectionTitle = styled.h2`
   text-align: center;
   color: #111;
   font-size: clamp(3.2rem, 4vw, 5.2rem);
- 
+
   position: relative;
   z-index: 30;
- 
+
   span {
     padding: 10px;
     color: #ffdb53;
@@ -616,30 +637,30 @@ export const SectionTitle = styled.h2`
     font-size: 1.2em;
   }
 `;
- 
+
 export const FeaturesGrid = styled.div`
   width: 82%;
   max-width: 1200px;
   margin: 0 auto;
   padding-top: 30px;
- 
+
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
- 
+
   position: relative;
   z-index: 30;
- 
+
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
   }
- 
+
   @media (max-width: 550px) {
     width: 88%;
     grid-template-columns: 1fr;
   }
 `;
- 
+
 export const FeatureCard = styled.div`
   min-height: 240px;
   padding: 28px 25px;
@@ -654,34 +675,34 @@ export const FeatureCard = styled.div`
   position: relative;
   overflow: hidden;
   cursor: pointer;
- 
+
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
- 
+
   transition:
     transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.45s ease,
     border-color 0.45s ease;
- 
+
   &:hover {
     transform: translateY(-12px) scale(1.06);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.16);
     border-color: #ffdb53;
     z-index: 5;
   }
- 
+
   @media (max-width: 900px) {
     min-height: 230px;
- 
+
     &:hover {
       transform: translateY(-8px) scale(1.035);
     }
   }
- 
+
   @media (max-width: 550px) {
     min-height: 210px;
   }
 `;
- 
+
 export const FeatureIcon = styled.div`
   width: 85px;
   height: 85px;
@@ -695,17 +716,17 @@ export const FeatureIcon = styled.div`
   font-size: 2.7rem;
   position: relative;
   z-index: 2;
- 
+
   transition:
     transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
     background 0.35s ease;
- 
+
   ${FeatureCard}:hover & {
     transform: rotate(-7deg) scale(1.13);
     background: #ffdb53;
   }
 `;
- 
+
 export const FeatureTitle = styled.h3`
   margin: 5px 0 10px;
   color: #111;
@@ -713,14 +734,14 @@ export const FeatureTitle = styled.h3`
   font-weight: 900;
   position: relative;
   z-index: 2;
- 
+
   transition: transform 0.35s ease;
- 
+
   ${FeatureCard}:hover & {
     transform: translateY(-2px);
   }
 `;
- 
+
 export const FeatureText = styled.p`
   max-width: 190px;
   margin: 0;
@@ -730,7 +751,7 @@ export const FeatureText = styled.p`
   position: relative;
   z-index: 2;
 `;
- 
+
 export const GalleryWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
@@ -738,46 +759,46 @@ export const GalleryWrapper = styled.div`
   position: relative;
   overflow: visible;
   padding: 0 30px;
- 
+
   .gallery-background {
     position: absolute;
     left: 50%;
     top: 50%;
- 
+
     width: 80%;
     max-width: 1200px;
     height: auto;
- 
+
     transform: translate(-50%, -50%);
- 
+
     object-fit: contain;
     object-position: center;
- 
+
     z-index: 1;
     pointer-events: none;
   }
- 
+
   @media (max-width: 900px) {
     padding: 0 20px;
- 
+
     .gallery-background {
       width: 90%;
     }
   }
- 
+
   @media (max-width: 600px) {
     padding: 0 10px;
- 
+
     .gallery-background {
       width: 95%;
     }
   }
 `;
- 
+
 /* =========================================================
    GALERIA — CARROSSEL INFINITO (animado via GSAP no track)
    ========================================================= */
- 
+
 export const GalleryViewport = styled.div`
   width: 100%;
   height: 620px;
@@ -786,7 +807,7 @@ export const GalleryViewport = styled.div`
   overflow: hidden;
   position: relative;
   z-index: 5;
- 
+
   /* esmaece as bordas para o carrossel "entrar" e "sair" suavemente */
   -webkit-mask-image: linear-gradient(
     to right,
@@ -802,12 +823,12 @@ export const GalleryViewport = styled.div`
     #000 94%,
     transparent 100%
   );
- 
+
   @media (max-width: 600px) {
     height: 420px;
   }
 `;
- 
+
 export const GalleryTrack = styled.div`
   display: flex;
   align-items: center;
@@ -818,7 +839,7 @@ export const GalleryTrack = styled.div`
   z-index: 6;
   will-change: transform;
 `;
- 
+
 export const GalleryCard = styled.div`
   position: relative;
   flex: 0 0 290px;
@@ -831,43 +852,43 @@ export const GalleryCard = styled.div`
   background: #ddd;
   cursor: zoom-in;
   outline: none;
- 
+
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
- 
+
   transition:
     transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.4s ease;
- 
+
   transform: scale(1);
   z-index: 3;
- 
+
   &:hover,
   &:focus-visible {
     transform: scale(1.08);
     box-shadow: 0 30px 55px rgba(0, 0, 0, 0.28);
     z-index: 100;
   }
- 
+
   &:focus-visible {
     box-shadow:
       0 0 0 4px #ffdb53,
       0 30px 55px rgba(0, 0, 0, 0.28);
   }
- 
+
   @media (max-width: 600px) {
     flex: 0 0 min(72vw, 270px);
     width: min(72vw, 270px);
     height: 350px;
     margin-right: 16px;
     border-radius: 20px;
- 
+
     &:hover {
       transform: none;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
   }
 `;
- 
+
 export const GalleryImage = styled.img`
   width: 100%;
   height: 100%;
@@ -877,7 +898,7 @@ export const GalleryImage = styled.img`
   user-select: none;
   -webkit-user-drag: none;
 `;
- 
+
 export const GalleryState = styled.div`
   width: 100%;
   min-height: 300px;
@@ -891,21 +912,21 @@ export const GalleryState = styled.div`
   position: relative;
   z-index: 20;
 `;
- 
+
 /* =========================================================
    LIGHTBOX — IMAGEM AMPLIADA
    ========================================================= */
- 
+
 const lightboxFade = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
 `;
- 
+
 const lightboxZoom = keyframes`
   from { opacity: 0; transform: scale(0.88) translateY(20px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 `;
- 
+
 export const LightboxOverlay = styled.div`
   position: fixed;
   inset: 0;
@@ -918,12 +939,12 @@ export const LightboxOverlay = styled.div`
   backdrop-filter: blur(6px);
   cursor: zoom-out;
   animation: ${lightboxFade} 0.25s ease both;
- 
+
   @media (max-width: 768px) {
     padding: 70px 16px;
   }
 `;
- 
+
 export const LightboxImage = styled.img`
   max-width: 100%;
   max-height: 100%;
@@ -935,7 +956,7 @@ export const LightboxImage = styled.img`
   user-select: none;
   animation: ${lightboxZoom} 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 `;
- 
+
 /* mesma animação do PrimaryButton: círculo de tinta nasce na posição do mouse */
 const inkButton = css`
   position: relative;
@@ -951,7 +972,7 @@ const inkButton = css`
   isolation: isolate;
   z-index: 3;
   transition: 0.3s ease;
- 
+
   &::before {
     content: "";
     position: absolute;
@@ -965,22 +986,22 @@ const inkButton = css`
     transition: transform 0.65s ease;
     z-index: 0;
   }
- 
+
   &:hover {
     color: #fff;
   }
- 
+
   &:hover::before {
     transform: translate(-50%, -50%) scale(18);
   }
- 
+
   svg {
     position: relative;
     z-index: 2;
     transition: 0.3s ease;
   }
 `;
- 
+
 export const LightboxClose = styled.button`
   ${inkButton}
   position: absolute;
@@ -989,15 +1010,15 @@ export const LightboxClose = styled.button`
   width: 56px;
   height: 56px;
   font-size: 1.3rem;
- 
+
   &:hover {
     transform: translateY(-3px);
   }
- 
+
   &:hover svg {
     transform: rotate(90deg);
   }
- 
+
   @media (max-width: 768px) {
     top: 14px;
     right: 14px;
@@ -1005,7 +1026,7 @@ export const LightboxClose = styled.button`
     height: 48px;
   }
 `;
- 
+
 export const LightboxNav = styled.button`
   ${inkButton}
   position: absolute;
@@ -1015,22 +1036,22 @@ export const LightboxNav = styled.button`
   height: 56px;
   font-size: 1.3rem;
   transform: translateY(-50%);
- 
+
   &:hover {
     transform: translateY(calc(-50% - 3px));
   }
- 
+
   &:hover svg {
     transform: translateX(${({ $side }) => ($side === "left" ? "-6px" : "6px")});
   }
- 
+
   @media (max-width: 768px) {
     width: 46px;
     height: 46px;
     ${({ $side }) => ($side === "left" ? "left: 8px;" : "right: 8px;")}
   }
 `;
- 
+
 export const LightboxCounter = styled.span`
   position: absolute;
   bottom: 22px;
@@ -1044,7 +1065,7 @@ export const LightboxCounter = styled.span`
   font-weight: 700;
   z-index: 3;
 `;
- 
+
 export const CTASection = styled.section`
   width: 100%;
   padding: 50px 0;
@@ -1052,7 +1073,7 @@ export const CTASection = styled.section`
   position: relative;
   z-index: 12;
 `;
- 
+
 export const CTAContainer = styled.div`
   width: 82%;
   max-width: 1200px;
@@ -1060,27 +1081,27 @@ export const CTAContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
- 
+
   @media (max-width: 850px) {
     flex-direction: column;
     text-align: center;
   }
 `;
- 
+
 export const CTAIcon = styled.div`
   color: #111;
   font-size: 5rem;
   transform: rotate(-15deg);
- 
+
   @media (max-width: 850px) {
     font-size: 3.5rem;
   }
 `;
- 
+
 export const CTAText = styled.div`
   flex: 1;
 `;
- 
+
 export const CTATitle = styled.h2`
   font-family: "Lost in South";
   font-weight: 400;
@@ -1088,14 +1109,14 @@ export const CTATitle = styled.h2`
   color: #111;
   font-size: clamp(1.5rem, 5vw, 4.2rem);
 `;
- 
+
 export const CTASubtitle = styled.p`
   margin: 5px 0 0;
   color: #111;
   font-size: clamp(0.9rem, 2vw, 1.2rem);
   font-weight: 700;
 `;
- 
+
 export const CTALink = styled.a`
   position: relative;
   width: 310px;
@@ -1113,7 +1134,7 @@ export const CTALink = styled.a`
   overflow: hidden;
   isolation: isolate;
   transition: 0.3s ease;
- 
+
   &::before {
     content: "";
     position: absolute;
@@ -1127,7 +1148,7 @@ export const CTALink = styled.a`
     transition: transform 0.65s ease;
     z-index: 0;
   }
- 
+
   .button-content {
     position: relative;
     z-index: 2;
@@ -1135,24 +1156,24 @@ export const CTALink = styled.a`
     align-items: center;
     gap: 12px;
   }
- 
+
   &:hover {
     color: #ffdb53;
     transform: translateY(-3px);
   }
- 
+
   &:hover::before {
     transform: translate(-50%, -50%) scale(18);
   }
- 
+
   &:hover svg {
     transform: translateX(6px);
   }
- 
+
   svg {
     transition: 0.3s ease;
   }
- 
+
   @media (max-width: 768px) {
     width: 280px;
   }

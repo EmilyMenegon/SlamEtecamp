@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 
 import {
   FaArrowRight,
@@ -159,6 +160,9 @@ export default function TelaInicial() {
   const marqueeRef = useRef(null);
   const gameRef = useRef(null);
   const feedbackRef = useRef(null);
+
+  // scroll suave
+  const lenisRef = useRef(null);
 
   // carrossel
   const trackRef = useRef(null);
@@ -375,6 +379,32 @@ export default function TelaInicial() {
     );
   }
 
+  /* ---------- SCROLL SUAVE (LENIS) ---------- */
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    lenisRef.current = lenis;
+
+    // mantém o ScrollTrigger sincronizado com o scroll suave
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const raf = (time) => lenis.raf(time * 1000);
+
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(raf);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
   /* ---------- CARREGAR GALERIA ---------- */
 
   useEffect(() => {
@@ -521,12 +551,14 @@ export default function TelaInicial() {
 
     const overflowAnterior = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    lenisRef.current?.stop();
 
     window.addEventListener("keydown", onKey);
 
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = overflowAnterior;
+      lenisRef.current?.start();
     };
   }, [lightboxIndex === null, fotos.length]);
 
