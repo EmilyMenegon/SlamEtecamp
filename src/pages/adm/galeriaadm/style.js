@@ -383,4 +383,3 @@ export const YearDescription = styled.span`
   @media (max-width: 600px) { font-size: 9px; white-space: normal; }
   @media (max-width: 520px) { font-size: 8px; }
 `;
-
