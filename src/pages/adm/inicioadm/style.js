@@ -1,8 +1,9 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, createGlobalStyle } from "styled-components";
 import { Link } from "react-router-dom";
 
 const COLORS = {
-  primary: "#831614",
+  /* vinho escuro (era #831614): agora usa o primaryDark da paleta */
+  primary: "#571111",
   primaryDark: "#571111",
   yellow: "#ffdb53",
   yellowDark: "#e3b900",
@@ -20,20 +21,6 @@ const fadeUp = keyframes`
   }
 `;
 
-const floating = keyframes`
-  0% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(10px, -15px);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-`;
-
 const pulse = keyframes`
   0%, 100% {
     opacity: 1;
@@ -46,42 +33,32 @@ const pulse = keyframes`
   }
 `;
 
-const pixelOneFloat = keyframes`
-  0% {
-    transform: translate(0, 0) rotate(-4deg);
-  }
-
-  50% {
-    transform: translate(-8px, -12px) rotate(4deg);
-  }
-
-  100% {
-    transform: translate(0, 0) rotate(-4deg);
-  }
-`;
-
-const pixelTwoFloat = keyframes`
-  0% {
-    transform: translate(0, 0) rotate(3deg);
-  }
-
-  50% {
-    transform: translate(8px, -10px) rotate(-4deg);
-  }
-
-  100% {
-    transform: translate(0, 0) rotate(3deg);
-  }
-`;
-
 /* =====================================================
    PÁGINA
 ===================================================== */
 
+/* remove a margem padrão do body (as bordas brancas nas laterais/topo) */
+export const GlobalStyle = createGlobalStyle`
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+`;
+
 export const Page = styled.div`
   width: 100%;
   min-height: 100vh;
-  background: #fff;
+
+  /* degradê levemente cinza: topo branco (não invade a navbar) */
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8f8f8 35%,
+    #efefef 100%
+  );
   color: #1c1c1c;
   font-family: "Poppins", sans-serif;
   overflow-x: hidden;
@@ -106,7 +83,9 @@ export const Main = styled.main`
   position: relative;
   padding: 55px 0 80px;
   overflow: hidden;
-  background: #fff;
+
+  /* o degradê fica no Page, assim não sobra faixa branca embaixo */
+  background: transparent;
 
   @media (max-width: 900px) {
     padding: 45px 0 65px;
@@ -125,22 +104,135 @@ export const Main = styled.main`
    HEADER
 ===================================================== */
 
+/* Retângulo de apresentação: mesmo visual dos cards, porém sem hover/clique */
 export const Header = styled.header`
   width: min(94%, 1300px);
-  margin: 0 auto 40px;
+  margin: 0 auto 28px;
+  padding: 34px 30px 36px;
   position: relative;
   z-index: 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  background: #fff;
+
+  /* borda vinho, igual ao card "Regulamento" */
+  border: 2px solid ${COLORS.primary};
+  border-radius: 20px;
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, .10),
+    0 3px 8px rgba(0, 0, 0, .045);
+
   animation: ${fadeUp} .8s ease both;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     width: calc(100% - 32px);
+    margin-bottom: 20px;
+    padding: 28px 21px 30px;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    justify-content: center;
     text-align: center;
-    margin-bottom: 30px;
+    gap: 18px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 22px 16px 24px;
+    border-radius: 16px;
   }
 
   @media (max-width: 480px) {
     width: calc(100% - 28px);
-    margin-bottom: 25px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 380px) {
+    padding: 18px 12px 20px;
+  }
+`;
+
+export const HeaderContent = styled.div`
+  min-width: 0;
+  flex: 1;
+`;
+
+/* Ícone do lado direito do retângulo de apresentação */
+export const HeaderIcon = styled.div`
+  width: 150px;
+  height: 150px;
+
+  flex: 0 0 150px;
+
+  /* afasta da borda direita, deixando o ícone mais para a esquerda */
+  margin-right: 90px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 24px;
+
+  background: #fff5c9;
+  border: 2px solid ${COLORS.primary};
+
+  color: ${COLORS.primary};
+
+  font-size: 68px;
+
+  /* leve inclinação + sombra deslocada: aparência de card informativo */
+  transform: rotate(-6deg);
+
+  box-shadow:
+    7px 7px 0 ${COLORS.primary},
+    0 16px 30px rgba(87, 17, 17, .14);
+
+  user-select: none;
+
+  @media (max-width: 1100px) {
+    margin-right: 50px;
+  }
+
+  @media (max-width: 900px) {
+    width: 120px;
+    height: 120px;
+    flex-basis: 120px;
+    margin-right: 28px;
+    border-radius: 20px;
+    font-size: 54px;
+    box-shadow:
+      6px 6px 0 ${COLORS.primary},
+      0 12px 24px rgba(87, 17, 17, .12);
+  }
+
+  @media (max-width: 768px) {
+    width: 84px;
+    height: 84px;
+    flex-basis: 84px;
+    margin-right: 0;
+    border-radius: 17px;
+    font-size: 38px;
+    transform: rotate(-5deg);
+    box-shadow:
+      5px 5px 0 ${COLORS.primary},
+      0 10px 20px rgba(87, 17, 17, .12);
+  }
+
+  @media (max-width: 480px) {
+    width: 70px;
+    height: 70px;
+    flex-basis: 70px;
+    border-radius: 15px;
+    font-size: 32px;
+    box-shadow:
+      4px 4px 0 ${COLORS.primary},
+      0 8px 16px rgba(87, 17, 17, .12);
   }
 `;
 
@@ -158,12 +250,12 @@ export const Badge = styled.div`
   justify-content: center;
   gap: 9px;
   border-radius: 30px;
-  background: #111;
+  background: ${COLORS.primary};
   color: #fff;
   font-size: 1rem;
   font-weight: 800;
   letter-spacing: 1.2px;
-  box-shadow: 0 8px 20px rgba(131, 22, 20, .16);
+  box-shadow: 0 8px 20px rgba(87, 17, 17, .3);
 
   @media (max-width: 768px) {
     margin-left: auto;
@@ -316,8 +408,7 @@ export const CardLink = styled(Link)`
 ===================================================== */
 
 export const Card = styled.div`
-  grid-column: ${({ $featured }) =>
-    $featured ? "1 / -1" : "auto"};
+  grid-column: ${({ $featured }) => ($featured ? "1 / -1" : "auto")};
 
   width: 100%;
   min-width: 0;
@@ -335,8 +426,7 @@ export const Card = styled.div`
   background: #fff;
 
   border: 2px solid
-    ${({ $featured }) =>
-      $featured ? COLORS.primary : "#d2d2d2"};
+    ${({ $featured }) => ($featured ? COLORS.primary : "#d2d2d2")};
 
   border-radius: 20px;
 
@@ -344,8 +434,7 @@ export const Card = styled.div`
     0 18px 45px rgba(0, 0, 0, .10),
     0 3px 8px rgba(0, 0, 0, .045);
 
-  cursor: ${({ $featured }) =>
-    $featured ? "default" : "pointer"};
+  cursor: ${({ $featured }) => ($featured ? "default" : "pointer")};
 
   animation: ${fadeUp} .7s ease backwards;
 
@@ -359,7 +448,7 @@ export const Card = styled.div`
     border-color: ${COLORS.primary};
 
     box-shadow:
-      0 24px 55px rgba(131, 22, 20, .16),
+      0 24px 55px rgba(87, 17, 17, .2),
       0 3px 8px rgba(0, 0, 0, .05);
   }
 
@@ -737,23 +826,14 @@ export const RegulationButton = styled.button`
 
   border: 2px solid
     ${({ $variant }) =>
-      $variant === "yellow"
-        ? COLORS.yellow
-        : COLORS.primary};
+      $variant === "yellow" ? COLORS.yellow : COLORS.primary};
 
   border-radius: 9px;
 
-  background:
-    ${({ $variant }) =>
-      $variant === "yellow"
-        ? COLORS.yellow
-        : COLORS.primary};
+  background: ${({ $variant }) =>
+    $variant === "yellow" ? COLORS.yellow : COLORS.primary};
 
-  color:
-    ${({ $variant }) =>
-      $variant === "yellow"
-        ? "#111"
-        : "#fff"};
+  color: ${({ $variant }) => ($variant === "yellow" ? "#111" : "#fff")};
 
   font-family: inherit;
   font-size: 15px;
@@ -784,16 +864,12 @@ export const RegulationButton = styled.button`
 
     border-radius: 50%;
 
-    background:
-      ${({ $variant }) =>
-        $variant === "yellow"
-          ? COLORS.primary
-          : COLORS.yellow};
+    background: ${({ $variant }) =>
+      $variant === "yellow" ? COLORS.primary : COLORS.yellow};
 
     transform: translate(-50%, -50%) scale(0);
 
-    transition:
-      transform .6s cubic-bezier(.16, 1, .3, 1);
+    transition: transform .6s cubic-bezier(.16, 1, .3, 1);
 
     z-index: -1;
 
@@ -818,21 +894,14 @@ export const RegulationButton = styled.button`
   }
 
   &:hover {
-    color:
-      ${({ $variant }) =>
-        $variant === "yellow"
-          ? "#fff"
-          : "#111"};
+    color: ${({ $variant }) => ($variant === "yellow" ? "#fff" : "#111")};
 
     transform: translateY(-2px);
 
-    box-shadow:
-      0 8px 18px rgba(131, 22, 20, .2);
+    box-shadow: 0 8px 18px rgba(87, 17, 17, .25);
 
     &::before {
-      transform:
-        translate(-50%, -50%)
-        scale(16);
+      transform: translate(-50%, -50%) scale(16);
     }
   }
 
@@ -885,7 +954,13 @@ export const CardFooter = styled.div`
   }
 `;
 
+/* Mesma animação dos botões de "Ano das inscrições":
+   - borda 2px que fica vinho no hover
+   - botão sobe 8px com sombra
+   - bolinha amarela cresce a partir do mouse */
 export const CardAction = styled.div`
+  position: relative;
+
   min-height: 48px;
 
   padding: 0 22px;
@@ -896,6 +971,7 @@ export const CardAction = styled.div`
 
   gap: 10px;
 
+  border: 2px solid ${COLORS.primary};
   border-radius: 9px;
 
   background: ${COLORS.primary};
@@ -905,25 +981,71 @@ export const CardAction = styled.div`
   font-size: 15px;
   font-weight: 700;
 
+  cursor: pointer;
+
+  overflow: hidden;
+  isolation: isolate;
+
   transition:
-    background .25s ease,
-    color .25s ease,
-    box-shadow .25s ease;
+    transform .3s cubic-bezier(.22, 1, .36, 1),
+    border-color .25s ease,
+    box-shadow .3s ease,
+    color .25s ease;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+
+    left: var(--mouse-x, 50%);
+    top: var(--mouse-y, 50%);
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: ${COLORS.yellow};
+
+    transform: translate(-50%, -50%) scale(0);
+
+    transition: transform .65s cubic-bezier(.16, 1, .3, 1);
+
+    z-index: -1;
+
+    pointer-events: none;
+  }
+
+  span,
+  svg {
+    position: relative;
+    z-index: 2;
+  }
 
   svg {
     transition: transform .25s ease;
   }
 
-  ${Card}:hover & {
-    background: ${COLORS.yellow};
+  &:hover {
+    transform: translateY(-8px);
+
+    border-color: ${COLORS.primary};
+
     color: #111;
 
-    box-shadow:
-      0 8px 18px rgba(131, 22, 20, .18);
+    box-shadow: 0 18px 35px rgba(87, 17, 17, .16);
+
+    &::before {
+      transform: translate(-50%, -50%) scale(13);
+    }
+
+    svg {
+      transform: translateX(6px);
+    }
   }
 
-  ${Card}:hover & svg {
-    transform: translateX(6px);
+  &:active {
+    transform: translateY(-3px) scale(.98);
   }
 
   @media (max-width: 600px) {
@@ -935,98 +1057,12 @@ export const CardAction = styled.div`
 
     font-size: 13px;
 
-    ${Card}:hover & svg {
-      transform: none;
+    &:hover {
+      transform: translateY(-4px);
+
+      svg {
+        transform: none;
+      }
     }
-  }
-`;
-
-/* =====================================================
-   BOLINHAS
-===================================================== */
-
-export const DecorativeCircle = styled.span`
-  position: absolute;
-
-  width: ${({ $size }) => $size || "50px"};
-  height: ${({ $size }) => $size || "50px"};
-
-  top: ${({ $top }) => $top || "auto"};
-  left: ${({ $left }) => $left || "auto"};
-  right: ${({ $right }) => $right || "auto"};
-  bottom: ${({ $bottom }) => $bottom || "auto"};
-
-  border-radius: 50%;
-
-  background: ${COLORS.yellow};
-
-  /* SEM BORDA */
-  border: none;
-
-  opacity: .9;
-
-  z-index: 1;
-
-  pointer-events: none;
-
-  animation:
-    ${floating}
-    ${({ $duration }) => $duration || "5s"}
-    ease-in-out infinite;
-
-  animation-delay:
-    ${({ $delay }) => $delay || "0s"};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-/* =====================================================
-   PIXELS
-===================================================== */
-
-export const Pixel = styled.img`
-  position: absolute;
-
-  width: ${({ $size }) => $size || "150px"};
-
-  height: auto;
-
-  top: ${({ $top }) => $top || "auto"};
-  left: ${({ $left }) => $left || "auto"};
-  right: ${({ $right }) => $right || "auto"};
-  bottom: ${({ $bottom }) => $bottom || "auto"};
-
-  z-index: 2;
-
-  pointer-events: none;
-  user-select: none;
-
-  object-fit: contain;
-
-  animation:
-    ${({ $animation }) =>
-      $animation === "two"
-        ? pixelTwoFloat
-        : pixelOneFloat}
-    4.8s ease-in-out infinite;
-
-  @media (max-width: 900px) {
-    width: 120px;
-  }
-
-  @media (max-width: 768px) {
-    width: 90px;
-    opacity: .8;
-  }
-
-  @media (max-width: 600px) {
-    width: 70px;
-    opacity: .55;
-  }
-
-  @media (max-width: 480px) {
-    display: none;
   }
 `;

@@ -9,6 +9,7 @@ import {
   FiCalendar, FiClock, FiCheck
 } from "react-icons/fi";
 import {
+  GlobalStyle,
   Page, Content, Header, TitleArea, Title, Subtitle, FilterContainer,
   FilterButton, TableContainer, TableHeader, TableHeaderInfo, TableTitle,
   TableDescription, DownloadButton, TableWrapper, Table, StudentCell,
@@ -308,6 +309,7 @@ export default function Inscricaoadm() {
 
   return (
     <Page>
+      <GlobalStyle />
       <Layoutadm />
       <Content>
         <Header>

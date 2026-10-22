@@ -271,6 +271,12 @@ export default function Login() {
         }
       );
 
+      /*
+        clearProps: "transform" -> depois da animação o GSAP
+        não deixa mais um transform inline, que travaria o
+        efeito de hover (subir 8px) dos botões.
+      */
+
       gsap.fromTo(
         home,
         {
@@ -285,6 +291,7 @@ export default function Login() {
           duration: 0.6,
           delay: 0.2,
           ease: "back.out(1.8)",
+          clearProps: "transform",
         }
       );
 
@@ -316,6 +323,7 @@ export default function Login() {
           stagger: 0.08,
           delay: 0.45,
           ease: "power3.out",
+          clearProps: "transform",
         }
       );
     }, page);
@@ -555,6 +563,7 @@ export default function Login() {
           stagger: 0.075,
           ease: "power3.out",
           overwrite: true,
+          clearProps: "transform",
         });
       });
     });

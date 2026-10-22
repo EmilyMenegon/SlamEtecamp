@@ -11,12 +11,15 @@ import {
   FaCheckCircle,
   FaEye,
   FaUpload,
+  FaUserShield,
 } from "react-icons/fa";
 
 import {
   Page,
   Main,
   Header,
+  HeaderContent,
+  HeaderIcon,
   Badge,
   BadgeDot,
   Title,
@@ -40,9 +43,8 @@ import {
   ButtonsRow,
   CardFooter,
   CardAction,
-  DecorativeCircle,
-  Pixel,
   RegulationButton,
+  GlobalStyle,
 } from "./style";
 
 const cards = [
@@ -94,7 +96,7 @@ export default function Inicioadm() {
     );
   }
 
-  const API_URL = "http://localhost:3001"; 
+  const API_URL = "http://localhost:3001";
   const [nomeRegulamento, setNomeRegulamento] = useState(
     "Regulamento-Slam-Interescolar.pdf"
   );
@@ -164,6 +166,7 @@ export default function Inicioadm() {
 
   return (
     <Page>
+      <GlobalStyle />
       <Layoutadm />
 
       <input
@@ -175,69 +178,30 @@ export default function Inicioadm() {
       />
 
       <Main>
-        {/* DECORAÇÕES */}
-
-        <DecorativeCircle
-          $size="55px"
-          $top="12%"
-          $right="7%"
-          $duration="5s"
-        />
-
-        <DecorativeCircle
-          $size="30px"
-          $top="45%"
-          $left="4%"
-          $duration="4s"
-          $delay=".5s"
-        />
-
-        <DecorativeCircle
-          $size="22px"
-          $bottom="10%"
-          $right="10%"
-          $duration="4.5s"
-          $delay="1s"
-        />
-
-        <Pixel
-          src="/pixel01.png"
-          alt=""
-          aria-hidden="true"
-          $top="17%"
-          $right="14%"
-          $size="150px"
-          $animation="one"
-        />
-
-        <Pixel
-          src="/pixel02.png"
-          alt=""
-          aria-hidden="true"
-          $bottom="9%"
-          $left="8%"
-          $size="150px"
-          $animation="two"
-        />
-
         {/* CABEÇALHO */}
 
         <Header>
-          <Badge>
-            <BadgeDot />
-            PAINEL ADMINISTRATIVO
-          </Badge>
+          <HeaderContent>
+            <Badge>
+              <BadgeDot />
+              PAINEL ADMINISTRATIVO
+            </Badge>
 
-          <Title>
-            Olá, <Highlight>Organizador!</Highlight>
-          </Title>
+            <Title>
+              Olá, <Highlight>Organizador!</Highlight>
+            </Title>
 
-          <Description>
-            Gerencie as principais informações do{" "}
-            <strong>Slam Interescolar ETECAMP</strong>
-            <br />
-            Escolha uma das opções abaixo para começar.
-          </Description>
+            <Description>
+              Gerencie as principais informações do{" "}
+              <strong>Slam Interescolar ETECAMP</strong>
+              <br />
+              Escolha uma das opções abaixo para começar.
+            </Description>
+          </HeaderContent>
+
+          <HeaderIcon aria-hidden="true">
+            <FaUserShield />
+          </HeaderIcon>
         </Header>
 
         {/* CARDS */}
@@ -343,7 +307,7 @@ export default function Inicioadm() {
                 </CardHeader>
 
                 <CardFooter>
-                  <CardAction>
+                  <CardAction onPointerMove={handleButtonMove}>
                     <span>Acessar</span>
                     <FaArrowRight />
                   </CardAction>

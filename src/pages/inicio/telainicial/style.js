@@ -107,15 +107,23 @@ export const Header = styled.header`
 `;
 
 export const Logo = styled.div`
-  width: clamp(90px, 16vh, 150px);
+  width: clamp(120px, 21vh, 200px);
 
   img {
     width: 100%;
+    /* limita a altura para o Header não roubar espaço do resto do Hero */
+    max-height: 14vh;
     display: block;
+    object-fit: contain;
+    object-position: left center;
   }
 
   @media (max-width: 768px) {
-    width: clamp(70px, 12vh, 90px);
+    width: clamp(95px, 16vh, 130px);
+
+    img {
+      max-height: 10vh;
+    }
   }
 `;
 
@@ -156,6 +164,7 @@ export const Container = styled.main`
   width: 85%;
   flex: 1;
   min-height: 0;
+  min-width: 0;
   margin: clamp(8px, 3vh, 30px) auto 0;
   padding-bottom: clamp(10px, 3vh, 30px);
   display: flex;
@@ -168,14 +177,16 @@ export const Container = styled.main`
   @media (max-width: 768px) {
     width: 90%;
     margin-top: clamp(8px, 2.5vh, 25px);
+    padding-top: 2vh;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
   }
 `;
 
 export const LeftSide = styled.div`
   width: 48%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -289,12 +300,19 @@ export const PrimaryButton = styled.button`
   &:hover svg {
     transform: translateX(6px);
   }
+
+  /* telas muito baixas: botão menor para caber */
+  @media (max-height: 600px) {
+    min-height: 48px;
+    padding: 10px 28px;
+  }
 `;
 
 export const ImageBox = styled.div`
   width: 50%;
   align-self: stretch;
   min-height: 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -307,22 +325,35 @@ export const ImageBox = styled.div`
 
 export const Image = styled.img`
   width: 100%;
+  height: 100%;
   max-width: 750px;
-  max-height: 62vh;
+  /* limita ao espaço do ImageBox, sem depender de vh */
+  max-height: 100%;
   object-fit: contain;
   display: block;
   position: relative;
   z-index: 2;
 `;
 
+/* mantém a bolinha sempre dentro do ImageBox e mais perto da foto */
+const circleSize = (size) => `min(${size || "50px"}, 8vw)`;
+
+/* top/left: nunca negativo e nunca passa do limite (100% - tamanho) */
+const startInside = (value, size) =>
+  value ? `clamp(0px, ${value}, calc(100% - ${circleSize(size)}))` : "auto";
+
+/* bottom/right: no mínimo 6% para dentro, então não corta embaixo/na lateral */
+const endInside = (value) => (value ? `max(6%, ${value})` : "auto");
+
 export const Circle = styled.span`
   position: absolute;
-  width: ${({ $size }) => $size || "50px"};
-  height: ${({ $size }) => $size || "50px"};
-  top: ${({ $top }) => $top || "auto"};
-  left: ${({ $left }) => $left || "auto"};
-  right: ${({ $right }) => $right || "auto"};
-  bottom: ${({ $bottom }) => $bottom || "auto"};
+  /* tamanho nunca passa de 8vw, para não estourar em telas menores */
+  width: ${({ $size }) => circleSize($size)};
+  height: ${({ $size }) => circleSize($size)};
+  top: ${({ $top, $size }) => startInside($top, $size)};
+  left: ${({ $left, $size }) => startInside($left, $size)};
+  right: ${({ $right }) => endInside($right)};
+  bottom: ${({ $bottom }) => endInside($bottom)};
   border-radius: 50%;
   background: #ffdb53;
   z-index: 1;
@@ -339,24 +370,24 @@ export const PixelImage = styled.img`
   z-index: 3;
 
   &.hero-pixel-01 {
-    width: 150px;
-    height: 100px;
-    top: -15%;
-    left: 16%;
+    width: clamp(70px, 10vw, 150px);
+    height: auto;
+    top: -5%;
+    left: 10%;
   }
 
   &.hero-pixel-02 {
-    width: 150px;
-    height: 100px;
+    width: clamp(70px, 10vw, 150px);
+    height: auto;
     top: 27%;
-    right: -7%;
+    right: 0;
   }
 
   &.hero-pixel-03 {
-    width: 150px;
-    height: 120px;
-    bottom: -20%;
-    left: 16%;
+    width: clamp(70px, 10vw, 150px);
+    height: auto;
+    bottom: -5%;
+    left: 10%;
   }
 
   @media (max-width: 768px) {
@@ -1127,7 +1158,7 @@ export const CTASubtitle = styled.p`
 
 export const CTALink = styled.a`
   position: relative;
-  width: 310px;
+  width: min(310px, 100%);
   min-height: 64px;
   padding: 18px 32px;
   display: flex;
@@ -1183,6 +1214,6 @@ export const CTALink = styled.a`
   }
 
   @media (max-width: 768px) {
-    width: 280px;
+    width: min(280px, 100%);
   }
 `;

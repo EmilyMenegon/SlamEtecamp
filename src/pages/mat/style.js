@@ -1,4 +1,8 @@
-import styled, { createGlobalStyle, keyframes } from "styled-components";
+import styled, {
+  createGlobalStyle,
+  css,
+  keyframes
+} from "styled-components";
 
 const colors = {
   yellow: "#FFDB53",
@@ -86,68 +90,73 @@ export const Container = styled.div`
   font-family: "Poppins", sans-serif;
 `;
 
-export const Pixel01 = styled.img`
-  position: absolute;
-  top: 6%;
-  left: 2%;
-  width: clamp(90px, 10vw, 155px);
+/* =========================================================
+   PIXELS (bichinhos flutuantes)
+
+   - position: fixed -> ficam presos à tela, e não ao Container
+     (que cresce com a lista e deixava eles no meio das notas).
+   - z-index acima do conteúdo (4), do Header (5) e abaixo do
+     Fab (100) e dos modais (9999): nunca ficam por baixo dos cards.
+   - pointer-events: none -> não atrapalham cliques.
+   - tamanho acompanha a largura da tela e tem limites.
+========================================================= */
+
+const pixelBase = css`
+  position: fixed;
   height: auto;
   object-fit: contain;
   pointer-events: none;
   user-select: none;
-  z-index: 1;
+  z-index: 6;
+  will-change: transform;
+`;
+
+export const Pixel01 = styled.img`
+  ${pixelBase}
+  top: clamp(130px, 22vh, 260px);
+  left: clamp(4px, 1.2vw, 28px);
+  width: clamp(44px, 7vw, 130px);
   animation: ${flutuar} 4.8s ease-in-out infinite;
 
-  @media (max-width: 900px) {
-    width: clamp(70px, 11vw, 120px);
-  }
-
   @media (max-width: 600px) {
-    display: none;
+    top: auto;
+    bottom: 22%;
+    left: 4px;
+    width: 46px;
+    opacity: .9;
   }
 `;
 
 export const Pixel02 = styled.img`
-  position: absolute;
-  top: 9%;
-  right: 2%;
-  width: clamp(100px, 11vw, 175px);
-  height: auto;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-  z-index: 1;
+  ${pixelBase}
+  top: clamp(90px, 14vh, 190px);
+  right: clamp(4px, 1.2vw, 28px);
+  width: clamp(48px, 7.5vw, 140px);
   animation: ${flutuar} 5.4s ease-in-out infinite;
   animation-delay: .5s;
 
-  @media (max-width: 900px) {
-    width: clamp(75px, 12vw, 130px);
-  }
-
   @media (max-width: 600px) {
-    display: none;
+    top: 78px;
+    right: 4px;
+    width: 48px;
+    opacity: .9;
   }
 `;
 
 export const Pixel03 = styled.img`
-  position: absolute;
-  bottom: 10%;
-  right: 3%;
-  width: clamp(90px, 10vw, 160px);
-  height: auto;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-  z-index: 1;
+  ${pixelBase}
+  /* sempre acima do botão flutuante (Fab) */
+  bottom: calc(35px + 68px + 22px);
+  right: clamp(4px, 1.5vw, 34px);
+  width: clamp(44px, 6.5vw, 125px);
   animation: ${flutuar} 5.1s ease-in-out infinite;
   animation-delay: 1s;
 
-  @media (max-width: 900px) {
-    width: clamp(70px, 11vw, 120px);
-  }
-
   @media (max-width: 600px) {
-    display: none;
+    bottom: calc(20px + 60px + 14px);
+    right: 4px;
+    width: 46px;
+    opacity: .9;
   }
 `;
 

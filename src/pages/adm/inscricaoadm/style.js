@@ -1,5 +1,4 @@
-
-import styled,{keyframes,css}from"styled-components";
+import styled,{keyframes,css,createGlobalStyle}from"styled-components";
  
 const COLORS={primary:"#831614",primaryDark:"#65100f",yellow:"#ffdb53",yellowDark:"#e3b900",background:"#fff",white:"#ffffff",text:"#1c1c1c",muted:"#777777",border:"#d8d8d8",danger:"#d62828",dangerDark:"#b71c1c",cream:"#fff7d0",gray:"#666666"};
  
@@ -25,8 +24,13 @@ const botaoAnimado=(tamanho=35,escala=11)=>css`
 &:focus-visible{outline:3px solid ${COLORS.yellow};outline-offset:4px}
 `;
  
+/* remove a margem padrão do body (as bordas brancas nas laterais/topo) */
+export const GlobalStyle=createGlobalStyle`
+html,body{margin:0;padding:0;width:100%;overflow-x:hidden}
+`;
+ 
 export const Page=styled.div`
-min-height:100vh;width:100%;background:#fff;color:${COLORS.text};font-family:"Poppins",sans-serif;box-sizing:border-box;overflow-x:hidden;
+min-height:100vh;width:100%;background:linear-gradient(180deg,#ffffff 0%,#f8f8f8 35%,#efefef 100%);color:${COLORS.text};font-family:"Poppins",sans-serif;box-sizing:border-box;overflow-x:hidden;
 `;
  
 export const Content=styled.main`
@@ -439,4 +443,3 @@ export const BlocoDescricao=styled.p`
 margin:0;color:#777;font-size:16px;line-height:1.45;
 @media(max-width:600px){font-size:13px}
 `;
- 

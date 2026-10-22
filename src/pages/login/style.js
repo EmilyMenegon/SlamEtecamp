@@ -1,4 +1,3 @@
-
 import styled, { createGlobalStyle } from "styled-components";
 
 /* ============================================================
@@ -164,6 +163,10 @@ export const Pixel = styled.div`
 
 /* ============================================================
    HOME
+   Mesma animação e borda dos botões de "anos" (Inscrições):
+   - borda 2px
+   - botão sobe 8px com sombra
+   - bolinha amarela cresce a partir do mouse
 ============================================================ */
 
 export const HomeButton = styled.button`
@@ -176,11 +179,12 @@ export const HomeButton = styled.button`
   height: 58px;
 
   padding: 0;
-  border: 0;
+
+  border: 2px solid ${colors.red};
   border-radius: 50%;
 
-  background: ${colors.yellow};
-  color: ${colors.black};
+  background: ${colors.red};
+  color: ${colors.white};
 
   display: flex;
   align-items: center;
@@ -198,8 +202,10 @@ export const HomeButton = styled.button`
     0 10px 30px rgba(0, 0, 0, 0.2);
 
   transition:
-    color 0.3s ease,
-    transform 0.25s ease;
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.3s ease,
+    color 0.25s ease;
 
   &::before {
     content: "";
@@ -209,12 +215,12 @@ export const HomeButton = styled.button`
     left: var(--mouse-x, 50%);
     top: var(--mouse-y, 50%);
 
-    width: 35px;
-    height: 35px;
+    width: 20px;
+    height: 20px;
 
     border-radius: 50%;
 
-    background: ${colors.red};
+    background: ${colors.yellow};
 
     transform:
       translate(-50%, -50%)
@@ -222,11 +228,11 @@ export const HomeButton = styled.button`
 
     pointer-events: none;
 
-    z-index: 0;
+    z-index: -1;
 
     transition:
       transform
-      0.55s
+      0.65s
       cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -242,18 +248,31 @@ export const HomeButton = styled.button`
   }
 
   &:hover {
-    color: ${colors.white};
-    transform: translateY(-3px);
+    color: #111;
+
+    border-color: ${colors.red};
+
+    transform: translateY(-8px);
+
+    box-shadow:
+      0 18px 35px rgba(131, 22, 20, 0.16);
   }
 
   &:hover::before {
     transform:
       translate(-50%, -50%)
-      scale(3.5);
+      scale(8);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform:
+      translateY(-3px)
+      scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${colors.yellow};
+    outline-offset: 4px;
   }
 
   svg {
@@ -269,6 +288,10 @@ export const HomeButton = styled.button`
 
     svg {
       font-size: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
     }
   }
 
@@ -1243,7 +1266,11 @@ export const ForgotPassword = styled.button`
 `;
 
 /* ============================================================
-   BOTÃO PRINCIPAL
+   BOTÃO PRINCIPAL (Entrar, Cadastrar, Gerar código...)
+   Mesma animação e borda dos botões de "anos" (Inscrições):
+   - borda 2px
+   - botão sobe 8px com sombra
+   - bolinha amarela cresce a partir do mouse
 ============================================================ */
 
 export const Button = styled.button`
@@ -1256,13 +1283,13 @@ export const Button = styled.button`
 
   padding: 0 24px;
 
-  border: 0;
+  border: 2px solid ${colors.red};
 
   border-radius: 17px;
 
-  background: ${colors.yellow};
+  background: ${colors.red};
 
-  color: ${colors.black};
+  color: ${colors.white};
 
   font-size: 1.05rem;
   font-weight: 700;
@@ -1278,9 +1305,10 @@ export const Button = styled.button`
   will-change: transform, opacity;
 
   transition:
-    color 0.3s ease,
-    transform 0.25s ease,
-    box-shadow 0.3s ease;
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.3s ease,
+    color 0.25s ease;
 
   &::before {
     content: "";
@@ -1295,7 +1323,7 @@ export const Button = styled.button`
 
     border-radius: 50%;
 
-    background: ${colors.red};
+    background: ${colors.yellow};
 
     transform:
       translate(-50%, -50%)
@@ -1303,7 +1331,7 @@ export const Button = styled.button`
 
     pointer-events: none;
 
-    z-index: 0;
+    z-index: -1;
 
     transition:
       transform
@@ -1322,19 +1350,18 @@ export const Button = styled.button`
     justify-content: center;
 
     color: inherit;
-
-    transition:
-      color 0.3s ease;
   }
 
   &:hover {
-    color: ${colors.white};
+    color: #111;
 
-    transform: translateY(-3px);
+    border-color: ${colors.red};
+
+    transform: translateY(-8px);
 
     box-shadow:
-      0 10px 25px
-      rgba(0, 0, 0, 0.17);
+      0 18px 35px
+      rgba(131, 22, 20, 0.16);
   }
 
   &:hover::before {
@@ -1345,8 +1372,13 @@ export const Button = styled.button`
 
   &:active {
     transform:
-      translateY(1px)
+      translateY(-3px)
       scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${colors.yellow};
+    outline-offset: 4px;
   }
 
   @media (max-width: 768px) {
@@ -1357,6 +1389,10 @@ export const Button = styled.button`
     border-radius: 14px;
 
     font-size: 0.95rem;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
   }
 
   @media (max-width: 500px) {
@@ -1409,4 +1445,3 @@ export const SuccessMessage = styled.p`
     font-size: 0.75rem;
   }
 `;
-
