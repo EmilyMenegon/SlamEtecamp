@@ -25,10 +25,14 @@ import {
   NumeroJurado,
   Nota,
   NotaVazia,
-  Rodape,
 } from "./style";
 
 const API_URL = "http://localhost:3001";
+
+// a TV mostra apenas o primeiro nome do poeta
+function primeiroNome(nome) {
+  return (nome || "").trim().split(/\s+/)[0] || "";
+}
 
 export default function TvExibicao() {
   const socketRef = useRef(null);
@@ -54,7 +58,7 @@ export default function TvExibicao() {
     socketRef.current = socket;
 
     socket.on("aoVivoAtual", (dados) => {
-      setPoeta(dados?.poeta || "");
+      setPoeta(primeiroNome(dados?.poeta));
 
       setNotas(
         Array.isArray(dados?.notas)
@@ -252,14 +256,6 @@ export default function TvExibicao() {
             </CardJurado>
           ))}
         </AreaNotas>
-
-        {/* ================================================== */}
-        {/* RODAPÉ */}
-        {/* ================================================== */}
-
-        <Rodape>
-          DAS RUAS PARA AS ESCOLAS
-        </Rodape>
       </Conteudo>
     </Tela>
   );

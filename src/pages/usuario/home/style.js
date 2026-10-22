@@ -232,6 +232,7 @@ export const LeftContent = styled.div`
    BADGE
 ============================================================ */
 
+/* detalhe vinho: selo do evento */
 export const EventBadge = styled.div`
   width: fit-content;
 
@@ -247,11 +248,11 @@ export const EventBadge = styled.div`
 
   border-radius: 30px;
 
-  background: #111;
+  background: #831614;
 
   color: #fff;
 
- font-size: 1.0rem;
+  font-size: 1.0rem;
 
   font-weight: 800;
 
@@ -259,7 +260,7 @@ export const EventBadge = styled.div`
 
   box-shadow:
     0 8px 20px
-    rgba(0, 0, 0, .12);
+    rgba(131, 22, 20, .28);
 
   animation:
     ${fadeUp} .7s ease both;
@@ -366,8 +367,9 @@ export const Description = styled.p`
     .85s ease .2s both;
 
 
+  /* detalhe vinho: palavras em destaque */
   strong {
-    color: #111;
+    color: #831614;
 
     font-weight: 800;
   }
@@ -578,6 +580,7 @@ export const PrimaryLink = styled.button`
 `;
 
 
+/* detalhe vinho: borda e ícone do botão secundário */
 export const SecondaryLink = styled.div`
   min-height: 70px;
 
@@ -593,7 +596,7 @@ export const SecondaryLink = styled.div`
 
   width: auto;
 
-  border: 1.5px solid #000;
+  border: 1.5px solid #831614;
 
   border-radius: 12px;
 
@@ -616,7 +619,7 @@ export const SecondaryLink = styled.div`
 
 
   svg {
-    color: #ffdb53;
+    color: #831614;
 
     transition:
       transform .25s ease;
@@ -624,7 +627,7 @@ export const SecondaryLink = styled.div`
 
 
   &:hover {
-    border-color: #111;
+    border-color: #831614;
 
     background: #f7f7f7;
 
@@ -772,7 +775,7 @@ export const PixelOne = styled.img`
 export const PixelTwo = styled.img`
   position: absolute;
 
- width: 150px;
+  width: 150px;
 
   height: auto;
 
@@ -828,7 +831,7 @@ export const PixelTwo = styled.img`
 export const PixelThree = styled.img`
   position: absolute;
 
- width: 150px;
+  width: 150px;
 
   height: auto;
 

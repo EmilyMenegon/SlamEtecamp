@@ -299,7 +299,10 @@ export const Conteudo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: clamp(18px, 4vh, 56px);
+  /* reserva o espaço do título no topo: nome e notas nunca encostam nele */
+  padding-top: clamp(80px, 14vh, 150px);
   z-index: 5;
   animation: ${aparecer} 0.7s ease;
   box-sizing: border-box;
@@ -316,11 +319,14 @@ export const Conteudo = styled.div`
 `;
 
 export const Cabecalho = styled.header`
+  /* fixo no topo do conteúdo, separado do nome do poeta e das notas */
+  position: absolute;
+  top: 3vh; /* altura do título: maior = mais baixo, menor ou negativo = mais alto */
+  left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  flex-shrink: 0;
 `;
 
 export const Titulo = styled.h1`
@@ -361,15 +367,16 @@ export const Titulo = styled.h1`
 
 export const AreaPoeta = styled.section`
   width: 100%;
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;
+  min-height: clamp(130px, 19vh, 220px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   position: relative;
-  padding: 1vh 0 0;
+  padding: 0;
+  margin-bottom: clamp(24px, 6vh, 80px);
   box-sizing: border-box;
 `;
 
@@ -399,14 +406,18 @@ export const NomePoeta = styled.div`
   position: relative;
   width: fit-content;
   max-width: 84vw;
-  max-height: 29vh;
+  max-height: 26vh;
   padding:
     clamp(8px, 1.2vh, 14px)
     clamp(18px, 2.8vw, 34px);
-  background: #ffdb53;
-  color: #010000;
+  background: #fff;
+  color: #831614;
+  border:
+    clamp(3px, 0.35vw, 5px)
+    solid
+    #010000;
   border-radius: clamp(10px, 1vw, 16px);
-  font-size: clamp(46px, 7vw, 115px);
+  font-size: clamp(54px, calc(2.5vw + 3.2vh), 88px);
   line-height: 0.95;
   font-weight: 900;
   letter-spacing: clamp(-3px, -0.25vw, -1px);
@@ -415,27 +426,31 @@ export const NomePoeta = styled.div`
     clamp(6px, 0.6vw, 10px)
     clamp(6px, 0.6vw, 10px)
     0
-    #831614;
+    #ffdb53,
+    clamp(12px, 1.2vw, 20px)
+    clamp(12px, 1.2vw, 20px)
+    0
+    #010000;
   word-break: break-word;
   overflow-wrap: anywhere;
   animation: ${aparecerPoeta} 0.55s ease forwards;
 
   @media (max-width: 700px) {
     max-width: 82vw;
-    max-height: 20vh;
-    font-size: clamp(30px, 8.5vw, 70px);
+    max-height: 22vh;
+    font-size: clamp(44px, 10vw, 64px);
     padding: 8px 15px;
-    box-shadow: 6px 6px 0 #831614;
+    box-shadow: 6px 6px 0 #ffdb53, 12px 12px 0 #010000;
   }
 
   @media (max-height: 650px) {
-    max-height: 18vh;
-    font-size: clamp(32px, 5.2vw, 68px);
+    max-height: 22vh;
+    font-size: clamp(50px, 4.6vw, 72px);
     padding: 6px 16px;
   }
 
   @media (max-height: 500px) {
-    font-size: clamp(28px, 4.2vw, 52px);
+    font-size: clamp(44px, 4vw, 58px);
   }
 `;
 
@@ -462,8 +477,12 @@ export const PoetaAguardando = styled.div`
     #831614;
 `;
 
+/* =========================================================
+   NOTAS DOS JURADOS (ampliadas; sem rodapé, então sem deslocamento)
+   ========================================================= */
+
 export const AreaNotas = styled.section`
-  width: min(90vw, 1100px);
+  width: min(92vw, 1300px);
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -473,37 +492,25 @@ export const AreaNotas = styled.section`
   padding: clamp(5px, 0.8vh, 9px);
   box-sizing: border-box;
   position: relative;
-  top: clamp(-110px, -10vh, -65px);
   animation: ${aparecer} 0.5s ease both;
 
   @media (max-width: 1100px) {
-    width: min(90vw, 900px);
+    width: min(92vw, 950px);
     gap: 9px;
-    top: clamp(-95px, -9vh, -55px);
   }
 
   @media (max-width: 850px) {
-    width: min(86vw, 640px);
+    width: min(88vw, 660px);
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;
     justify-content: center;
     gap: 9px;
-    top: clamp(-75px, -8vh, -40px);
   }
 
   @media (max-width: 600px) {
-    width: min(84vw, 430px);
+    width: min(86vw, 440px);
     gap: 9px;
-    top: clamp(-55px, -7vh, -28px);
-  }
-
-  @media (max-height: 650px) {
-    top: clamp(-80px, -9vh, -45px);
-  }
-
-  @media (max-height: 500px) {
-    top: clamp(-65px, -8vh, -35px);
   }
 `;
 
@@ -514,11 +521,11 @@ export const CardJurado = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: clamp(165px, 18vh, 220px);
+  min-height: clamp(180px, 22vh, 250px);
   padding:
-    clamp(12px, 1.5vh, 20px)
+    clamp(14px, 1.8vh, 24px)
     clamp(7px, 0.9vw, 14px)
-    clamp(12px, 1.6vh, 20px);
+    clamp(14px, 2vh, 24px);
   background: rgba(255, 255, 255, 0.92);
   border:
     clamp(2px, 0.25vw, 3px)
@@ -537,22 +544,26 @@ export const CardJurado = styled.div`
 
   @media (min-width: 851px) {
     flex: 1 1 0;
-    max-width: 195px;
+    max-width: 260px;
   }
 
   @media (max-width: 850px) {
     width: calc((100% - 18px) / 3);
     flex: 0 0 calc((100% - 18px) / 3);
-    min-height: 150px;
+    min-height: 160px;
   }
 
   @media (max-width: 600px) {
     width: calc((100% - 9px) / 2);
     flex: 0 0 calc((100% - 9px) / 2);
-    min-height: 135px;
+    min-height: 140px;
     border-radius: 10px;
     padding: 9px 5px 12px;
     box-shadow: 3px 3px 0 #831614;
+  }
+
+  @media (max-height: 650px) {
+    min-height: 140px;
   }
 `;
 
@@ -564,11 +575,11 @@ export const NumeroJurado = styled.div`
   padding:
     clamp(6px, 0.8vh, 9px)
     clamp(11px, 1.1vw, 17px);
-  margin-bottom: clamp(4px, 0.6vh, 7px);
+  margin-bottom: clamp(4px, 0.7vh, 8px);
   background: #831614;
   color: #fff7d0;
   border-radius: 999px;
-  font-size: clamp(11px, 1vw, 15px);
+  font-size: clamp(11px, 1vw, 16px);
   font-weight: 900;
   letter-spacing: clamp(0.5px, 0.08vw, 1.2px);
   line-height: 1;
@@ -598,7 +609,7 @@ export const NumeroJurado = styled.div`
 
 export const Nota = styled.div`
   color: #010000;
-  font-size: clamp(60px, 6.2vw, 100px);
+  font-size: clamp(54px, 6vw, 96px);
   line-height: 0.9;
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -609,64 +620,50 @@ export const Nota = styled.div`
   animation: ${aparecerPoeta} 0.4s ease both;
 
   @media (max-width: 1100px) {
-    font-size: clamp(54px, 5.8vw, 90px);
+    font-size: clamp(50px, 6.4vw, 80px);
   }
 
   @media (max-width: 850px) {
-    font-size: clamp(48px, 7.5vw, 74px);
+    font-size: clamp(50px, 9.5vw, 78px);
   }
 
   @media (max-width: 600px) {
-    font-size: clamp(40px, 10.5vw, 60px);
+    font-size: clamp(44px, 15vw, 62px);
   }
 
-  @media (max-height: 650px) {
-    font-size: clamp(46px, 5.4vw, 72px);
+  @media (max-height: 650px) and (min-width: 851px) {
+    font-size: clamp(50px, 5.8vw, 80px);
   }
 
-  @media (max-height: 500px) {
-    font-size: clamp(40px, 4.8vw, 62px);
+  @media (max-height: 500px) and (min-width: 851px) {
+    font-size: clamp(42px, 5vw, 64px);
   }
 `;
 
 export const NotaVazia = styled.div`
   color: #831614;
-  font-size: clamp(60px, 6.2vw, 100px);
+  font-size: clamp(54px, 6vw, 96px);
   line-height: 0.9;
   font-weight: 900;
   opacity: 0.3;
 
+  @media (max-width: 1100px) {
+    font-size: clamp(50px, 6.4vw, 80px);
+  }
+
   @media (max-width: 850px) {
-    font-size: clamp(48px, 7.5vw, 74px);
+    font-size: clamp(50px, 9.5vw, 78px);
   }
 
   @media (max-width: 600px) {
-    font-size: clamp(40px, 10.5vw, 60px);
+    font-size: clamp(44px, 15vw, 62px);
   }
 
-  @media (max-height: 650px) {
-    font-size: clamp(46px, 5.4vw, 72px);
+  @media (max-height: 650px) and (min-width: 851px) {
+    font-size: clamp(50px, 5.8vw, 80px);
   }
 
-  @media (max-height: 500px) {
-    font-size: clamp(40px, 4.8vw, 62px);
+  @media (max-height: 500px) and (min-width: 851px) {
+    font-size: clamp(42px, 5vw, 64px);
   }
-`;
-
-export const Rodape = styled.footer`
-  margin-top: auto;
-  flex-shrink: 0;
-  padding:
-    clamp(5px, 0.8vh, 8px)
-    clamp(15px, 2vw, 24px);
-  background: #fff;
-  color: #831614;
-  border-radius: 30px;
-  font-size: clamp(8px, 0.9vw, 14px);
-  font-weight: 900;
-  letter-spacing: clamp(1px, 0.2vw, 2px);
-  text-transform: uppercase;
-  box-shadow: 5px 5px 0 #ffdb53;
-  text-align: center;
-  max-width: 80vw;
 `;

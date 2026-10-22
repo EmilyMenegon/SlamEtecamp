@@ -66,9 +66,14 @@ export const Page = styled.div`
   position: relative;
 `;
 
+/* =========================================================
+   HERO — dimensionado pela LARGURA e também pela ALTURA da tela
+   ========================================================= */
+
 export const HeroWrapper = styled.div`
   width: 100%;
   height: 100vh;
+  height: 100svh; /* evita cortar no celular por causa da barra do navegador */
   position: fixed;
   inset: 0;
   z-index: 1;
@@ -78,7 +83,7 @@ export const HeroWrapper = styled.div`
 
 export const Hero = styled.section`
   width: 100%;
-  height: 100vh;
+  height: 100%; /* herda do wrapper */
   background: #fff;
   position: relative;
   display: flex;
@@ -88,7 +93,7 @@ export const Hero = styled.section`
 
 export const Header = styled.header`
   width: 90%;
-  margin: 25px auto 0;
+  margin: clamp(12px, 3vh, 25px) auto 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -97,12 +102,12 @@ export const Header = styled.header`
 
   @media (max-width: 768px) {
     width: 92%;
-    margin-top: 20px;
+    margin-top: clamp(12px, 2.5vh, 20px);
   }
 `;
 
 export const Logo = styled.div`
-  width: 150px;
+  width: clamp(90px, 16vh, 150px);
 
   img {
     width: 100%;
@@ -110,7 +115,7 @@ export const Logo = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 90px;
+    width: clamp(70px, 12vh, 90px);
   }
 `;
 
@@ -151,18 +156,18 @@ export const Container = styled.main`
   width: 85%;
   flex: 1;
   min-height: 0;
-  margin: 30px auto 0;
-  padding-bottom: 30px;
+  margin: clamp(8px, 3vh, 30px) auto 0;
+  padding-bottom: clamp(10px, 3vh, 30px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 50px;
+  gap: clamp(20px, 4vw, 50px);
   position: relative;
   z-index: 2;
 
   @media (max-width: 768px) {
     width: 90%;
-    margin-top: 25px;
+    margin-top: clamp(8px, 2.5vh, 25px);
     flex-direction: column;
     justify-content: center;
     text-align: center;
@@ -182,10 +187,10 @@ export const LeftSide = styled.div`
 `;
 
 export const BigText = styled.h1`
-  padding: 20px;
-  margin: 0 0 0px;
+  padding: clamp(8px, 2vh, 20px) 20px;
+  margin: 0;
   color: #111;
-  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  font-size: clamp(1.9rem, min(4vw, 7vh), 4.5rem);
   line-height: 1.15;
   font-weight: 900;
 
@@ -196,27 +201,24 @@ export const BigText = styled.h1`
     font-weight: 400;
     font-size: 1.2em;
   }
-
-  @media (max-width: 768px) {
-    font-size: 2.2rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.9rem;
-  }
 `;
 
 export const SmallText = styled.p`
   width: 85%;
-  margin: 0 0 30px;
+  margin: 0 0 clamp(14px, 3vh, 30px);
   /* mesmo recuo lateral do BigText para alinhar com o título */
   padding: 0 20px;
   color: #777;
-  font-size: 1.55rem;
+  font-size: clamp(1rem, min(1.8vw, 3vh), 1.55rem);
   line-height: 1.7;
 
   @media (max-width: 768px) {
     width: 100%;
+  }
+
+  /* telas muito baixas: o texto some para não espremer o resto */
+  @media (max-height: 600px) {
+    display: none;
   }
 `;
 
@@ -236,8 +238,8 @@ export const Buttons = styled.div`
 
 export const PrimaryButton = styled.button`
   position: relative;
-  min-height: 76px;
-  padding: 22px 42px;
+  min-height: clamp(56px, 9vh, 76px);
+  padding: clamp(14px, 2.5vh, 22px) 42px;
   border: none;
   border-radius: 14px;
   background: #ffdb53;
@@ -291,6 +293,8 @@ export const PrimaryButton = styled.button`
 
 export const ImageBox = styled.div`
   width: 50%;
+  align-self: stretch;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -304,6 +308,8 @@ export const ImageBox = styled.div`
 export const Image = styled.img`
   width: 100%;
   max-width: 750px;
+  max-height: 62vh;
+  object-fit: contain;
   display: block;
   position: relative;
   z-index: 2;
@@ -361,7 +367,9 @@ export const PixelImage = styled.img`
 export const MarqueeSection = styled.section`
   width: 100%;
   height: 180px;
+  /* acompanha a altura do Hero (100svh); a segunda linha só vale onde svh existe */
   margin: 100vh 0 0 !important;
+  margin: 100svh 0 0 !important;
   padding: 0 !important;
   position: relative;
   z-index: 30;

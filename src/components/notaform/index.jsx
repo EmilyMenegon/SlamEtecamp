@@ -30,6 +30,11 @@ function obterToken() {
   return authorization.replace(/^Bearer\s+/i, "");
 }
 
+// a TV recebe apenas o primeiro nome do poeta
+function primeiroNome(nome) {
+  return (nome || "").trim().split(/\s+/)[0] || "";
+}
+
 export default function NotaForm({ visible, nota, onClose, onSave }) {
   const socketRef = useRef(null);
   const editando = Boolean(nota);
@@ -279,7 +284,7 @@ export default function NotaForm({ visible, nota, onClose, onSave }) {
     if (!visible) return;
 
     socketRef.current?.emit("aoVivoAtualizar", {
-      poeta: poetaSelecionado?.nome || "",
+      poeta: primeiroNome(poetaSelecionado?.nome),
       notas: notes.map((n) => (n === "" ? null : Number(n))),
       tempo: tempoSegundos
     });
@@ -390,7 +395,7 @@ export default function NotaForm({ visible, nota, onClose, onSave }) {
 
       if (sucesso) {
         socketRef.current?.emit("aoVivoFinalizar", {
-          poeta: poetaSelecionado?.nome || "",
+          poeta: primeiroNome(poetaSelecionado?.nome),
           notas: resultado.values,
           media: resultado.baseAverage,
           desconto: resultado.penalty,
