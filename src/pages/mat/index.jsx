@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHome, FaPlus, FaCheckCircle, FaPaperPlane } from "react-icons/fa";
-import { logout, getAuthHeaders } from "../../utils/auth";
+import { logout, apiFetch } from "../../utils/auth";
 import NotaCard from "../../components/notacard";
 import NotaForm from "../../components/notaform";
 import EmptyState from "../../components/EmptyState";
@@ -52,11 +52,20 @@ export default function Mat() {
   const [idDelete, setIdDelete] = useState(null);
   const [publicando, setPublicando] = useState(null);
 
+  /*
+    A seta "voltar" do navegador não sai da tela (o bloqueio fica na
+    RotaProtegida): ela só abre o modal de confirmação de saída.
+  */
+  useEffect(() => {
+    const abrir = () => setShowLogoutModal(true);
+
+    window.addEventListener("voltar-bloqueado", abrir);
+    return () => window.removeEventListener("voltar-bloqueado", abrir);
+  }, []);
+
   const loadNotas = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/notas`, {
-        headers: getAuthHeaders()
-      });
+      const res = await apiFetch(`${API_URL}/notas`);
 
       const data = await res.json();
       setNotas(Array.isArray(data) ? data : []);
@@ -91,7 +100,7 @@ export default function Mat() {
 
   async function handleLogout() {
     await logout();
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
 
   async function handleSave(payload) {
@@ -102,11 +111,10 @@ export default function Mat() {
 
       const method = editingNota ? "PUT" : "POST";
 
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders()
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
       });
@@ -147,9 +155,8 @@ export default function Mat() {
   async function confirmDelete() {
     if (idDelete) {
       try {
-        await fetch(`${API_URL}/notas/${idDelete}`, {
-          method: "DELETE",
-          headers: getAuthHeaders()
+        await apiFetch(`${API_URL}/notas/${idDelete}`, {
+          method: "DELETE"
         });
 
         await loadNotas();
@@ -168,11 +175,10 @@ export default function Mat() {
     setPublicando(eventoId);
 
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `${API_URL}/eventos/${eventoId}/notas/publicar`,
         {
-          method: "PUT",
-          headers: getAuthHeaders()
+          method: "PUT"
         }
       );
 

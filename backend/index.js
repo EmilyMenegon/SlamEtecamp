@@ -115,6 +115,15 @@ app.use(express.json({ limit: "100kb" }));
 
 app.use(express.static("public"));
 
+/*
+ * Respostas da API nunca ficam em cache do navegador.
+ * Fica depois do express.static para não afetar as imagens da pasta public.
+ */
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+
 app.get("/", (req, res) => {
   res.json({ message: "Backend funcionando!" });
 });

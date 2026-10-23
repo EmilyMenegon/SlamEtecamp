@@ -15,7 +15,7 @@ import {
   getUsuarioLogado,
   salvarUsuarioLogado,
   logout,
-  getAuthHeaders,
+  apiFetch,
 } from "../../../utils/auth";
 
 import {
@@ -77,17 +77,14 @@ export default function Profileadm() {
     const usuarioLogado = getUsuarioLogado();
 
     if (!usuarioLogado?.email) {
-      navigate("/login");
+      navigate("/login", { replace: true });
       return;
     }
 
-    fetch(
+    apiFetch(
       `http://localhost:3001/perfil/${encodeURIComponent(
         usuarioLogado.email
-      )}`,
-      {
-        headers: getAuthHeaders(),
-      }
+      )}`
     )
       .then(async (res) => {
         const data = await res.json();
@@ -157,12 +154,11 @@ export default function Profileadm() {
     }
 
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `http://localhost:3001/perfil/${encodeURIComponent(emailAtual)}`,
         {
           method: "PUT",
           headers: {
-            ...getAuthHeaders(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -203,7 +199,7 @@ export default function Profileadm() {
 
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
 
   return (

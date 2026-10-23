@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Layout from "../../../components/Layout";
+import { apiFetch } from "../../../utils/auth";
 
 import {
   FiFileText,
@@ -77,16 +78,7 @@ export default function Mural() {
 
   function carregarPosts() {
 
-    fetch(`${API_URL}/mural`, {
-
-      headers: {
-
-        Authorization:
-          `Bearer ${localStorage.getItem("token")}`,
-
-      },
-
-    })
+    apiFetch(`${API_URL}/mural`)
 
       .then((resposta) => {
 

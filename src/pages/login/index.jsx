@@ -894,6 +894,11 @@ export default function Login() {
         return;
       }
 
+      /*
+        O token fica dentro do objeto do usuário.
+        Não é mais gravado separado em localStorage("token").
+      */
+
       salvarUsuarioLogado({
         nome: data.nome,
         tipo: data.tipo,
@@ -901,16 +906,17 @@ export default function Login() {
         token: data.token,
       });
 
-      localStorage.setItem(
-        "token",
-        data.token
-      );
+      /*
+        replace: a tela de login sai do histórico,
+        então a seta "voltar" não leva de volta para ela.
+      */
 
       if (
         data.tipo ===
         "matematico"
       ) {
         navigate("/mat", {
+          replace: true,
           state: {
             aba: "notas",
           },
@@ -920,11 +926,13 @@ export default function Login() {
         "organizador"
       ) {
         navigate(
-          "/adm/inicioadm"
+          "/adm/inicioadm",
+          { replace: true }
         );
       } else {
         navigate(
-          "/usuario/home"
+          "/usuario/home",
+          { replace: true }
         );
       }
     } catch (err) {

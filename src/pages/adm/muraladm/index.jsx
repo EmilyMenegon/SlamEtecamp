@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Layoutadm from "../../../components/Layoutadm";
+import { apiFetch } from "../../../utils/auth";
 
 import {
   FiPlus,
@@ -137,14 +138,12 @@ export default function Muraladm() {
 
   // ===================================================
   // CABEÇALHOS PADRÃO
+  // (o Authorization é adicionado pelo apiFetch)
   // ===================================================
 
   function headersPadrao() {
     return {
       "Content-Type": "application/json",
-
-      Authorization:
-        `Bearer ${localStorage.getItem("token")}`,
     };
   }
 
@@ -154,12 +153,7 @@ export default function Muraladm() {
   // ===================================================
 
   const carregarPosts = () => {
-    fetch(`${API_URL}/mural`, {
-      headers: {
-        Authorization:
-          `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+    apiFetch(`${API_URL}/mural`)
       .then((resposta) => {
         if (!resposta.ok) {
           throw new Error(
@@ -294,7 +288,7 @@ export default function Muraladm() {
       return;
     }
 
-    fetch(`${API_URL}/mural`, {
+    apiFetch(`${API_URL}/mural`, {
       method: "POST",
 
       headers:
@@ -403,7 +397,7 @@ export default function Muraladm() {
       return;
     }
 
-    fetch(
+    apiFetch(
       `${API_URL}/mural/${postEditando.id}`,
       {
         method: "PUT",
@@ -475,15 +469,10 @@ export default function Muraladm() {
       return;
     }
 
-    fetch(
+    apiFetch(
       `${API_URL}/mural/${postParaExcluir.id}`,
       {
         method: "DELETE",
-
-        headers: {
-          Authorization:
-            `Bearer ${localStorage.getItem("token")}`,
-        },
       }
     )
       .then((resposta) => {

@@ -46,6 +46,17 @@ const modalShow = keyframes`
   }
 `;
 
+/* =========================================================
+   BREAKPOINTS USADOS NESTE ARQUIVO
+
+   - 960px: o botão de sair (casinha) passa para dentro do card
+            do título, para não ficar por cima dele.
+   - 900px: tablet.
+   - 600px: celular.
+   - 420px: celular pequeno (botões dos modais empilham).
+   - 360px: celular bem pequeno.
+========================================================= */
+
 export const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
@@ -61,9 +72,15 @@ export const GlobalStyle = createGlobalStyle`
     min-height: 100%;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     font-family: "Poppins", sans-serif;
     background: ${colors.cream};
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -83,11 +100,21 @@ export const Container = styled.div`
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   padding: 40px 0 70px;
   overflow: hidden;
   background: ${colors.cream};
   font-family: "Poppins", sans-serif;
+
+  @media (max-width: 900px) {
+    padding: 32px 0 110px;
+  }
+
+  /* espaço extra embaixo para o botão + não cobrir o último card */
+  @media (max-width: 600px) {
+    padding: 24px 0 110px;
+  }
 `;
 
 /* =========================================================
@@ -95,10 +122,11 @@ export const Container = styled.div`
 
    - position: fixed -> ficam presos à tela, e não ao Container
      (que cresce com a lista e deixava eles no meio das notas).
-   - z-index acima do conteúdo (4), do Header (5) e abaixo do
-     Fab (100) e dos modais (9999): nunca ficam por baixo dos cards.
+   - z-index: 1 -> ficam ATRÁS do conteúdo (4), do Header (5),
+     do Fab (100) e dos modais (9999), mas acima do fundo.
    - pointer-events: none -> não atrapalham cliques.
    - tamanho acompanha a largura da tela e tem limites.
+   - quem prefere menos movimento no sistema não vê a animação.
 ========================================================= */
 
 const pixelBase = css`
@@ -107,8 +135,12 @@ const pixelBase = css`
   object-fit: contain;
   pointer-events: none;
   user-select: none;
-  z-index: 6;
+  z-index: 1;
   will-change: transform;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 export const Pixel01 = styled.img`
@@ -124,6 +156,10 @@ export const Pixel01 = styled.img`
     left: 4px;
     width: 46px;
     opacity: .9;
+  }
+
+  @media (max-width: 360px) {
+    width: 38px;
   }
 `;
 
@@ -141,22 +177,30 @@ export const Pixel02 = styled.img`
     width: 48px;
     opacity: .9;
   }
+
+  @media (max-width: 360px) {
+    width: 40px;
+  }
 `;
 
 export const Pixel03 = styled.img`
   ${pixelBase}
   /* sempre acima do botão flutuante (Fab) */
-  bottom: calc(35px + 68px + 22px);
+  bottom: calc(35px + 68px + 22px + env(safe-area-inset-bottom, 0px));
   right: clamp(4px, 1.5vw, 34px);
   width: clamp(44px, 6.5vw, 125px);
   animation: ${flutuar} 5.1s ease-in-out infinite;
   animation-delay: 1s;
 
   @media (max-width: 600px) {
-    bottom: calc(20px + 60px + 14px);
+    bottom: calc(20px + 60px + 14px + env(safe-area-inset-bottom, 0px));
     right: 4px;
     width: 46px;
     opacity: .9;
+  }
+
+  @media (max-width: 360px) {
+    width: 38px;
   }
 `;
 
@@ -168,6 +212,15 @@ export const Header = styled.header`
   justify-content: center;
   position: relative;
   z-index: 5;
+
+  @media (max-width: 900px) {
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 600px) {
+    width: 92%;
+    margin-bottom: 22px;
+  }
 `;
 
 export const LogoText = styled.div`
@@ -182,6 +235,17 @@ export const LogoText = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
+
+  /* deixa espaço dos dois lados para o botão de sair não cobrir o título */
+  @media (max-width: 960px) {
+    padding: 24px 84px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 20px 64px;
+    border-radius: 16px;
+    border-bottom-width: 6px;
+  }
 `;
 
 export const Title = styled.h1`
@@ -190,6 +254,7 @@ export const Title = styled.h1`
   font-size: 42px;
   font-weight: 800;
   letter-spacing: -.5px;
+  text-align: center;
 
   &::after {
     content: "";
@@ -201,8 +266,22 @@ export const Title = styled.h1`
     background: ${colors.yellow};
   }
 
+  @media (max-width: 900px) {
+    font-size: 38px;
+  }
+
   @media (max-width: 600px) {
-    font-size: 34px;
+    font-size: 32px;
+
+    &::after {
+      width: 46px;
+      height: 4px;
+      margin-top: 8px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    font-size: 28px;
   }
 `;
 
@@ -268,9 +347,18 @@ export const BackButton = styled.button`
     transform: scale(.95);
   }
 
+  /* telas médias e pequenas: o botão fica dentro do card, centralizado */
+  @media (max-width: 960px) {
+    left: 14px;
+    top: 50%;
+    margin-top: -29px;
+  }
+
   @media (max-width: 600px) {
+    left: 10px;
     width: 48px;
     height: 48px;
+    margin-top: -24px;
 
     svg {
       width: 18px;
@@ -285,6 +373,10 @@ export const Content = styled.main`
   margin: 0 auto;
   position: relative;
   z-index: 4;
+
+  @media (max-width: 600px) {
+    width: 92%;
+  }
 `;
 
 export const EventoGroup = styled.section`
@@ -309,9 +401,25 @@ export const EventoGroup = styled.section`
     background: ${colors.yellow};
   }
 
+  @media (max-width: 900px) {
+    margin-bottom: 28px;
+    padding: 24px;
+    border-radius: 22px;
+
+    &::before {
+      left: 24px;
+    }
+  }
+
   @media (max-width: 600px) {
-    padding: 20px;
+    margin-bottom: 22px;
+    padding: 20px 14px 18px;
     border-radius: 18px;
+
+    &::before {
+      left: 18px;
+      width: 56px;
+    }
   }
 `;
 
@@ -325,10 +433,15 @@ export const List = styled.div`
   > * {
     width: min(100%, 380px);
     flex: 0 1 380px;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    gap: 20px;
   }
 
   @media (max-width: 600px) {
-    gap: 18px;
+    gap: 16px;
 
     > * {
       width: 100%;
@@ -346,13 +459,24 @@ export const EventoGroupHeader = styled.div`
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 2px solid rgba(255, 219, 83, .45);
+
+  /* no celular: título em cima e botão de publicar embaixo, largura total */
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+  }
 `;
 
 export const EventoGroupTitle = styled.h2`
   margin: 0;
+  min-width: 0;
   color: ${colors.wine};
   font-size: 22px;
   font-weight: 800;
+  overflow-wrap: anywhere;
 
   @media (max-width: 600px) {
     font-size: 19px;
@@ -421,6 +545,13 @@ export const PublishButton = styled.button`
     opacity: .6;
     cursor: not-allowed;
   }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
 `;
 
 export const PublishedBadge = styled.span`
@@ -437,12 +568,17 @@ export const PublishedBadge = styled.span`
   svg {
     font-size: 14px;
   }
+
+  @media (max-width: 600px) {
+    justify-content: center;
+    width: 100%;
+  }
 `;
 
 export const Fab = styled.button`
   position: fixed;
   right: 35px;
-  bottom: 35px;
+  bottom: calc(35px + env(safe-area-inset-bottom, 0px));
   width: 68px;
   height: 68px;
   padding: 0;
@@ -502,11 +638,17 @@ export const Fab = styled.button`
     transform: translateY(1px) scale(.97);
   }
 
+  @media (max-width: 900px) {
+    right: 24px;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
   @media (max-width: 600px) {
     right: 20px;
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     width: 60px;
     height: 60px;
+    border-radius: 18px;
   }
 `;
 
@@ -516,18 +658,23 @@ export const Overlay = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 20px;
   background: rgba(87, 17, 17, 0.35);
   backdrop-filter: blur(4px);
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 9999;
+
+  @media (max-width: 500px) {
+    padding: 16px;
+  }
 `;
 
 export const Modal = styled.div`
   position: relative;
   width: 420px;
   max-width: 100%;
+  margin: auto;
   padding: 32px;
   background: ${colors.white};
   border-radius: 22px;
@@ -566,6 +713,16 @@ export const Modal = styled.div`
   @media (max-width: 500px) {
     padding: 26px 20px;
     border-radius: 18px;
+    box-shadow:
+      6px 6px 0 ${colors.red},
+      0 16px 40px rgba(0, 0, 0, 0.2);
+
+    &::before {
+      width: 70px;
+      height: 70px;
+      top: -26px;
+      right: -26px;
+    }
 
     h3 {
       font-size: 1.2rem;
@@ -582,6 +739,10 @@ export const ModalTitle = styled.h2`
   color: ${colors.red};
   font-size: 1.4rem;
   font-weight: 900;
+
+  @media (max-width: 500px) {
+    font-size: 1.2rem;
+  }
 `;
 
 export const ModalText = styled.p`
@@ -589,6 +750,11 @@ export const ModalText = styled.p`
   color: #666;
   font-size: 0.92rem;
   line-height: 1.5;
+
+  @media (max-width: 500px) {
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+  }
 `;
 
 export const Buttons = styled.div`
@@ -606,6 +772,7 @@ export const Buttons = styled.div`
 export const CancelButton = styled.button`
   position: relative;
   width: 145px;
+  max-width: 100%;
   height: 46px;
   padding: 0;
   border: 2px solid ${colors.yellow};
@@ -659,6 +826,7 @@ export const CancelButton = styled.button`
 export const DeleteButton = styled.button`
   position: relative;
   width: 145px;
+  max-width: 100%;
   height: 46px;
   padding: 0;
   border: 0;

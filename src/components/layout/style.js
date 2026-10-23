@@ -48,6 +48,8 @@ export const Header = styled.header`
 
 // =========================================================
 // NAVBAR
+// (grid de 3 colunas: logo | menu | perfil
+//  -> o menu fica sempre no centro exato da navbar)
 // =========================================================
 
 export const Navbar = styled.nav`
@@ -59,15 +61,15 @@ export const Navbar = styled.nav`
 
   min-height: 100px;
 
-  display: flex;
+  display: grid;
+
+  grid-template-columns: 1fr auto 1fr;
 
   font-family:
     "Poppins",
     sans-serif;
 
   align-items: center;
-
-  justify-content: space-between;
 
   gap: 20px;
 
@@ -156,6 +158,10 @@ export const Navbar = styled.nav`
     gap: 8px;
 
     border-radius: 24px;
+
+    display: flex;
+
+    justify-content: space-between;
   }
 
 
@@ -176,6 +182,8 @@ export const Logo = styled(Link)`
   height: 82px;
 
   flex-shrink: 0;
+
+  justify-self: start;
 
   display: flex;
 
@@ -256,7 +264,7 @@ export const Logo = styled(Link)`
 // =========================================================
 
 export const NavCenter = styled.div`
-  flex: 1;
+  justify-self: center;
 
   min-width: 0;
 
@@ -449,6 +457,8 @@ export const NavItem = styled(NavLink)`
 
   justify-content: center;
 
+  text-align: center;
+
   box-sizing: border-box;
 
   border-radius: 18px;
@@ -526,6 +536,8 @@ export const NavItem = styled(NavLink)`
 
     justify-content: flex-start;
 
+    text-align: left;
+
     font-size: 16px;
 
     border-radius: 13px;
@@ -556,6 +568,8 @@ export const ProfileIcon = styled(Link)`
   height: 72px;
 
   flex-shrink: 0;
+
+  justify-self: end;
 
   display: flex;
 

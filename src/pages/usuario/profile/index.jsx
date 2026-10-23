@@ -19,7 +19,7 @@ import {
   getUsuarioLogado,
   salvarUsuarioLogado,
   logout,
-  getAuthHeaders,
+  apiFetch,
 } from "../../../utils/auth";
 
 import {
@@ -93,15 +93,15 @@ export default function Profile() {
   useEffect(() => {
     const usuarioLogado = getUsuarioLogado();
 
-    if (!usuarioLogado?.email) return;
+    if (!usuarioLogado?.email) {
+      navigate("/login", { replace: true });
+      return;
+    }
 
-    fetch(
+    apiFetch(
       `http://localhost:3001/perfil/${encodeURIComponent(
         usuarioLogado.email
-      )}`,
-      {
-        headers: getAuthHeaders(),
-      }
+      )}`
     )
       .then(async (res) => {
         const data = await res.json();
@@ -126,7 +126,7 @@ export default function Profile() {
         console.error(err);
         setErro("Não foi possível carregar o perfil.");
       });
-  }, []);
+  }, [navigate]);
 
   const handleButtonMouseMove = (e) => {
     const button = e.currentTarget;
@@ -176,7 +176,7 @@ export default function Profile() {
     setCarregandoCodigo(true);
 
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `http://localhost:3001/perfil/${encodeURIComponent(
           emailAtual
         )}/solicitar-codigo`,
@@ -184,7 +184,6 @@ export default function Profile() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...getAuthHeaders(),
           },
           body: JSON.stringify({
             nome,
@@ -233,7 +232,7 @@ export default function Profile() {
     setVerificandoCodigo(true);
 
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `http://localhost:3001/perfil/${encodeURIComponent(
           emailAtual
         )}/verificar-codigo`,
@@ -241,7 +240,6 @@ export default function Profile() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...getAuthHeaders(),
           },
           body: JSON.stringify({
             codigo: codigo.trim(),
@@ -316,7 +314,7 @@ export default function Profile() {
     }
 
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         `http://localhost:3001/perfil/${encodeURIComponent(
           emailAtual
         )}`,
@@ -324,7 +322,6 @@ export default function Profile() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            ...getAuthHeaders(),
           },
           body: JSON.stringify({
             nome,
@@ -363,7 +360,7 @@ export default function Profile() {
 
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
 
   return (
