@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Layout from "../../../components/layout";
 
@@ -27,9 +27,14 @@ import {
   InputWrapper,
   InputLabel,
   Input,
-  SelectWrapper,
+  CustomSelectWrapper,
   SelectLabel,
-  Select,
+  SelectTrigger,
+  SelectPlaceholder,
+  SelectChevron,
+  OptionsList,
+  OptionItem,
+  OptionEmpty,
   Button,
   AlreadyBox,
   AlreadyTitle,
@@ -44,6 +49,175 @@ import {
 
 const EQUALIZER_COLUMNS = 16;
 const EQUALIZER_ROWS = 10;
+
+const TURMAS = ["1º ano", "2º ano", "3º ano"];
+const CURSOS = ["Informática", "Marketing", "Administração", "Humanas"];
+const TURNOS = ["Manhã", "Tarde", "Noite"];
+
+/*
+ * ============================================================
+ * SELECT CUSTOMIZADO (lista no estilo do NotaForm)
+ * ============================================================
+ */
+
+function handleOptionMouseMove(e) {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+
+  el.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+  el.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+}
+
+function CustomSelect({
+  label,
+  name,
+  value,
+  options = [],
+  onChange,
+  placeholder = "Selecione",
+  disabled = false,
+}) {
+  const id = useId();
+  const wrapperRef = useRef(null);
+  const listRef = useRef(null);
+
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const normalized = options.map((opt) =>
+    typeof opt === "object" ? opt : { value: opt, label: opt }
+  );
+
+  const selected = normalized.find(
+    (opt) => String(opt.value) === String(value)
+  );
+
+  // fecha ao clicar fora
+  useEffect(() => {
+    if (!open) return;
+
+    function handleClickOutside(e) {
+      if (!wrapperRef.current?.contains(e.target)) setOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  // mantém o item ativo visível ao navegar pelo teclado
+  useEffect(() => {
+    if (!open || activeIndex < 0) return;
+
+    listRef.current?.children[activeIndex]?.scrollIntoView({
+      block: "nearest",
+    });
+  }, [open, activeIndex]);
+
+  function abrir() {
+    if (disabled) return;
+
+    const idx = normalized.findIndex(
+      (opt) => String(opt.value) === String(value)
+    );
+
+    setActiveIndex(idx >= 0 ? idx : 0);
+    setOpen(true);
+  }
+
+  function escolher(opt) {
+    onChange?.({ target: { name, value: opt.value } });
+    setOpen(false);
+  }
+
+  function handleKeyDown(e) {
+    if (disabled) return;
+
+    if (e.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+
+      if (!open) {
+        abrir();
+        return;
+      }
+
+      const step = e.key === "ArrowDown" ? 1 : -1;
+
+      setActiveIndex((i) => {
+        const total = normalized.length;
+        return total ? (i + step + total) % total : -1;
+      });
+
+      return;
+    }
+
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+
+      if (!open) {
+        abrir();
+        return;
+      }
+
+      if (normalized[activeIndex]) escolher(normalized[activeIndex]);
+    }
+  }
+
+  return (
+    <CustomSelectWrapper ref={wrapperRef} $open={open}>
+      <SelectLabel htmlFor={id}>{label}</SelectLabel>
+
+      <SelectTrigger
+        id={id}
+        type="button"
+        disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => (open ? setOpen(false) : abrir())}
+        onKeyDown={handleKeyDown}
+      >
+        {selected ? (
+          selected.label
+        ) : (
+          <SelectPlaceholder>{placeholder}</SelectPlaceholder>
+        )}
+      </SelectTrigger>
+
+      <SelectChevron $open={open} />
+
+      {open && (
+        <OptionsList role="listbox" ref={listRef}>
+          {normalized.length === 0 ? (
+            <OptionEmpty>Nenhuma opção disponível.</OptionEmpty>
+          ) : (
+            normalized.map((opt, index) => (
+              <OptionItem
+                key={opt.value}
+                type="button"
+                role="option"
+                aria-selected={String(opt.value) === String(value)}
+                data-active={index === activeIndex}
+                $selected={String(opt.value) === String(value)}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  escolher(opt);
+                }}
+                onMouseMove={handleOptionMouseMove}
+              >
+                <span>{opt.label}</span>
+              </OptionItem>
+            ))
+          )}
+        </OptionsList>
+      )}
+    </CustomSelectWrapper>
+  );
+}
 
 export default function Inscricao() {
   const equalizerRef = useRef(null);
@@ -400,55 +574,33 @@ export default function Inscricao() {
                 </InputWrapper>
 
                 <div className="form-row">
-                  <SelectWrapper>
-                    <SelectLabel htmlFor="turma">Turma</SelectLabel>
+                  <CustomSelect
+                    label="Turma"
+                    name="turma"
+                    value={turma}
+                    options={TURMAS}
+                    placeholder="Selecione a turma"
+                    onChange={(e) => setTurma(e.target.value)}
+                  />
 
-                    <Select
-                      id="turma"
-                      name="turma"
-                      value={turma}
-                      onChange={(e) => setTurma(e.target.value)}
-                    >
-                      <option value="">Selecione a turma</option>
-                      <option value="1º ano">1º ano</option>
-                      <option value="2º ano">2º ano</option>
-                      <option value="3º ano">3º ano</option>
-                    </Select>
-                  </SelectWrapper>
-
-                  <SelectWrapper>
-                    <SelectLabel htmlFor="curso">Curso</SelectLabel>
-
-                    <Select
-                      id="curso"
-                      name="curso"
-                      value={curso}
-                      onChange={(e) => setCurso(e.target.value)}
-                    >
-                      <option value="">Selecione o curso</option>
-                      <option value="Informática">Informática</option>
-                      <option value="Marketing">Marketing</option>
-                      <option value="Administração">Administração</option>
-                      <option value="Humanas">Humanas</option>
-                    </Select>
-                  </SelectWrapper>
+                  <CustomSelect
+                    label="Curso"
+                    name="curso"
+                    value={curso}
+                    options={CURSOS}
+                    placeholder="Selecione o curso"
+                    onChange={(e) => setCurso(e.target.value)}
+                  />
                 </div>
 
-                <SelectWrapper>
-                  <SelectLabel htmlFor="turno">Turno</SelectLabel>
-
-                  <Select
-                    id="turno"
-                    name="turno"
-                    value={turno}
-                    onChange={(e) => setTurno(e.target.value)}
-                  >
-                    <option value="">Selecione o turno</option>
-                    <option value="Manhã">Manhã</option>
-                    <option value="Tarde">Tarde</option>
-                    <option value="Noite">Noite</option>
-                  </Select>
-                </SelectWrapper>
+                <CustomSelect
+                  label="Turno"
+                  name="turno"
+                  value={turno}
+                  options={TURNOS}
+                  placeholder="Selecione o turno"
+                  onChange={(e) => setTurno(e.target.value)}
+                />
 
                 {erro && <div className="form-message error">{erro}</div>}
 
