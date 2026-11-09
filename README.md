@@ -24,14 +24,14 @@ Extrair o arquivo zip;
 Entrar no editor de código (exemplo: VS Code)
 Abrir a pasta SlamEtecamp extraída (Arquivo → Abrir Pasta);
 Abrir o terminal (Terminal → Novo Terminal) e digitar:
- cd tcc
+cd SlamEtecamp
 cd backend
 npm install
 node index.js → para rodar o backend
 Não fechar esse terminal
 
 Abrir outro terminal (botão + no painel do terminal) e digitar:
-cd tcc
+cd SlamEtecamp
 npm install
 npm run dev → para rodar o site
 O terminal vai mostrar um link 
