@@ -41,7 +41,7 @@ Obs: o backend e o site precisam estar rodando ao mesmo tempo. O npm install só
  
 ## Como citar o projeto  
 
-DE MACEDO, Carolina; MENEGON, Emily; BORGES, Nathalia. Desenvolvimento de um sistema web para apoiar a organização do evento Slam Interescolar na ETEC de Campo Limpo Paulista. 2026. 51 p. 
+SPINELLA, Carolina; MENEGON, Emily; BORGES, Nathalia. Desenvolvimento de um sistema web para apoiar a organização do evento Slam Interescolar na ETEC de Campo Limpo Paulista. 2026. 51 p. 
 
 Em caso de dúvidas entre em contato com eminathicaroltcc@gmail.com 
 
