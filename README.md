@@ -1,6 +1,8 @@
 # Título do Projeto e a logo  
 Desenvolvimento de um sistema web para apoiar a organização do evento Slam Interescolar na ETEC de Campo Limpo Paulista.
 
+ ![Logo](docs/img/logotipo.jpeg)
+
 ## Descrição 
 O Slam Interescolar da ETEC de Campo Limpo Paulista (ETECAMP) é uma competição de poesia falada cuja organização enfrenta dificuldades no gerenciamento das inscrições, no controle das etapas, no registro das pontuações e na divulgação das informações. Essas atividades eram realizadas de forma manual, o que pode ocasionar erros e perda de informações.
 
@@ -18,6 +20,10 @@ Diante disso, desenvolveu-se o sistema web Slam ETECAMP, que centraliza as infor
 - SQLite (3)
 
  ## Algumas imagens para demostrar o site desenvolvido
+ ![Tela Inicial](docs/img/inicio.png)
+ ![Tela Inicial do aluno](docs/img/aluno.png)
+ ![Caça Palavras](docs/img/cacapalavras.png)
+ ![Tela TV](docs/img/tvOrganizador.png)
 
 ## Como executar o projeto (passo-a-passo) 
 Extrair o arquivo zip;
