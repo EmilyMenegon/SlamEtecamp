@@ -1,8 +1,10 @@
 import styled, { css, keyframes } from "styled-components";
  
+/* muted: antes #777777 (contraste 4,47:1 sobre branco, reprovado no WCAG AA).
+   Agora #595959 (cerca de 7:1). */
 const COLORS = {
   primary: "#831614", primaryDark: "#65100f", yellow: "#ffdb53", yellowDark: "#e3b900",
-  background: "#fff", white: "#ffffff", text: "#1c1c1c", muted: "#777777", border: "#d8d8d8",
+  background: "#fff", white: "#ffffff", text: "#1c1c1c", muted: "#595959", border: "#d8d8d8",
   danger: "#d62828", dangerDark: "#b71c1c", cream: "#fff7d0", gray: "#666666",
 };
  
@@ -57,7 +59,7 @@ export const Title = styled.h1`
 `;
  
 export const Subtitle = styled.p`
-  width: 100%; max-width: 700px; margin: 8px auto 0; color: #777; font-size: 1.55rem; line-height: 1.6; text-align: center;
+  width: 100%; max-width: 700px; margin: 8px auto 0; color: ${COLORS.muted}; font-size: 1.55rem; line-height: 1.6; text-align: center;
   @media (max-width: 768px) { font-size: 1.1rem; }
   @media (max-width: 480px) { font-size: 1rem; }
 `;
@@ -127,12 +129,13 @@ export const YearNumber = styled.strong`
   @media (max-width: 390px) { font-size: 1.15rem; }
 `;
  
+/* inativo: antes #999 (contraste ~2,8:1); agora COLORS.muted. Ativo: branco com mais opacidade. */
 export const YearDescription = styled.span`
-  position: relative; z-index: 2; color: ${({ $active }) => ($active ? "rgba(255,255,255,.72)" : "#999")}; font-size: 10px; font-weight: 500; line-height: 1.2; text-align: center; white-space: nowrap;
+  position: relative; z-index: 2; color: ${({ $active }) => ($active ? "rgba(255,255,255,.85)" : COLORS.muted)}; font-size: 12px; font-weight: 500; line-height: 1.2; text-align: center; white-space: nowrap;
   transition: color .25s ease;
   ${YearCard}:hover & { color: #5e4900; }
-  @media (max-width: 600px) { font-size: 9px; white-space: normal; }
-  @media (max-width: 520px) { font-size: 8px; }
+  @media (max-width: 600px) { font-size: 11px; white-space: normal; }
+  @media (max-width: 520px) { font-size: 10px; }
 `;
  
 /* BLOCOS DA PÁGINA */
@@ -164,7 +167,7 @@ export const BlocoTitulo = styled.h2`
 `;
  
 export const BlocoDescricao = styled.p`
-  margin: 0; color: #777; font-size: 16px; line-height: 1.45;
+  margin: 0; color: ${COLORS.muted}; font-size: 16px; line-height: 1.45;
   @media (max-width: 600px) { font-size: 13px; }
 `;
  
@@ -214,7 +217,7 @@ export const EventTitle = styled.h2`
 `;
  
 export const EventDescription = styled.p`
-  margin: 0 0 18px; color: #777; font-size: 15px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  margin: 0 0 18px; color: ${COLORS.muted}; font-size: 15px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   @media (max-width: 600px) { font-size: 14px; }
 `;
  
@@ -280,7 +283,7 @@ export const EmptyTitle = styled.h2`
 `;
  
 export const EmptyText = styled.p`
-  max-width: 400px; margin: 0; color: #777; font-size: 15px; line-height: 1.6;
+  max-width: 400px; margin: 0; color: ${COLORS.muted}; font-size: 15px; line-height: 1.6;
 `;
  
 /* FLOATING BUTTON */
@@ -326,7 +329,7 @@ export const ModalTitle = styled.h2`
  
 export const CloseButton = styled.button`
   ${botaoBase}
-  width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%; background: #fff; color: #888;
+  width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%; background: #fff; color: #666;
   ${botaoAnimado(12, 7)}
   .buttonContent { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; }
   svg { position: relative; z-index: 2; width: 19px; height: 19px; transition: .35s ease; }
@@ -356,13 +359,14 @@ export const Label = styled.label`
 export const Input = styled.input`
   width: 100%; min-height: 50px; box-sizing: border-box; margin-bottom: 20px; padding: 0 14px; border: 1px solid #cfcfcf; border-radius: 10px; background: #f8f8f8; color: #222; font-family: inherit; font-size: 15px; outline: none;
   transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
-  &::placeholder { color: #999; }
+  &::placeholder { color: #6b6b6b; }
   &:focus { border-color: ${COLORS.yellowDark}; background: #fff; box-shadow: 0 0 0 3px rgba(255,219,83,.16); }
 `;
  
 export const TextArea = styled.textarea`
   width: 100%; min-height: 130px; margin-bottom: 20px; padding: 14px; resize: vertical; box-sizing: border-box; border: 1px solid #cfcfcf; border-radius: 10px; background: #f8f8f8; color: #222; font-family: inherit; font-size: 15px; outline: none;
   transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  &::placeholder { color: #6b6b6b; }
   &:focus { border-color: ${COLORS.yellowDark}; background: #fff; box-shadow: 0 0 0 3px rgba(255,219,83,.16); }
 `;
  
@@ -399,7 +403,7 @@ export const ImageUploadIcon = styled.div`
 export const ImageUploadText = styled.div`
   display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
   strong { color: #333; font-size: 15px; }
-  span, small { color: #999; font-size: 12px; }
+  span, small { color: #6b6b6b; font-size: 12px; }
 `;
  
 export const ImagePreview = styled.div`
@@ -425,7 +429,7 @@ export const ParticipantsBox = styled.div`
 export const ParticipantsText = styled.div`
   display: flex; flex-direction: column; gap: 3px;
   strong { color: #333; font-size: 13px; }
-  span { color: #999; font-size: 11px; }
+  span { color: #6b6b6b; font-size: 11px; }
 `;
  
 export const FormFooter = styled.div`
@@ -517,7 +521,7 @@ export const RankingTitle = styled.h3`
 `;
  
 export const RankingDescription = styled.p`
-  margin: 7px 0 0; color: #777; font-size: 13px; line-height: 1.5;
+  margin: 7px 0 0; color: ${COLORS.muted}; font-size: 13px; line-height: 1.5;
 `;
  
 export const RankingTableWrapper = styled.div`
@@ -563,13 +567,14 @@ export const Average = styled.span`
   color: #222; font-weight: 700;
 `;
  
+/* verde: antes #3a9d5d (contraste ~3,4:1); agora #2e7d32 (~5,1:1) */
 export const Penalty = styled.span`
-  color: ${({ $penalidade }) => ($penalidade ? COLORS.danger : "#3a9d5d")}; font-weight: 700;
+  color: ${({ $penalidade }) => ($penalidade ? COLORS.danger : "#2e7d32")}; font-weight: 700;
 `;
  
 export const Time = styled.span`
   display: inline-flex; align-items: center; gap: 5px; color: #555; font-weight: 600;
-  svg { color: #777; }
+  svg { color: ${COLORS.muted}; }
 `;
  
 export const FinalScore = styled.span`
@@ -577,9 +582,8 @@ export const FinalScore = styled.span`
 `;
  
 export const RankingEmpty = styled.div`
-  min-height: 180px; padding: 30px; box-sizing: border-box; border: 1px dashed #cfcfcf; border-radius: 14px; background: #fafafa; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 7px; color: #999;
+  min-height: 180px; padding: 30px; box-sizing: border-box; border: 1px dashed #cfcfcf; border-radius: 14px; background: #fafafa; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 7px; color: #6b6b6b;
   svg { color: #a27e00; font-size: 28px; }
   strong { color: #444; font-size: 14px; }
-  span { max-width: 400px; color: #999; font-size: 12px; line-height: 1.5; }
+  span { max-width: 400px; color: #6b6b6b; font-size: 12px; line-height: 1.5; }
 `;
- 

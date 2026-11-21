@@ -24,6 +24,7 @@ function handleMouseMove(e) {
 export default function NotaCard({ nota, onEdit, onDelete }) {
   const notaFinal = nota.resultado ?? nota.media ?? 0;
   const aprovado = notaFinal >= 7;
+  const nomeAluno = nota.nomeAluno || "poeta";
 
   return (
     <Card>
@@ -78,12 +79,24 @@ export default function NotaCard({ nota, onEdit, onDelete }) {
       </Content>
 
       <Actions>
-        <EditButton onClick={() => onEdit(nota)} onMouseMove={handleMouseMove}>
-          <FaEdit />
+        <EditButton
+          type="button"
+          onClick={() => onEdit(nota)}
+          onMouseMove={handleMouseMove}
+          aria-label={`Editar nota de ${nomeAluno}`}
+          title="Editar nota"
+        >
+          <FaEdit aria-hidden="true" />
         </EditButton>
 
-        <DeleteButton onClick={() => onDelete(nota.id)} onMouseMove={handleMouseMove}>
-          <FaTrash />
+        <DeleteButton
+          type="button"
+          onClick={() => onDelete(nota.id)}
+          onMouseMove={handleMouseMove}
+          aria-label={`Excluir nota de ${nomeAluno}`}
+          title="Excluir nota"
+        >
+          <FaTrash aria-hidden="true" />
         </DeleteButton>
       </Actions>
     </Card>

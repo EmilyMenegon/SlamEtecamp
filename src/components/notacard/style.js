@@ -53,8 +53,9 @@ export const NotaItem = styled.div`
   border-radius: 10px;
 `;
 
+/* font-size: antes 10px (o WAVE avisava "texto muito pequeno"); agora 12px */
 export const Label = styled.span`
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   color: #571111;
   text-transform: uppercase;

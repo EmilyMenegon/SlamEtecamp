@@ -209,12 +209,13 @@ export default function Mat() {
 
         <Header>
           <BackButton
+            type="button"
             onClick={() => setShowLogoutModal(true)}
             onMouseMove={handleMouseMove}
             aria-label="Sair da conta"
             title="Sair da conta"
           >
-            <FaHome />
+            <FaHome aria-hidden="true" />
           </BackButton>
 
           <LogoText>
@@ -243,16 +244,17 @@ export default function Mat() {
                     {grupo.eventoId &&
                       (todasPublicadas ? (
                         <PublishedBadge>
-                          <FaCheckCircle />
+                          <FaCheckCircle aria-hidden="true" />
                           Publicado
                         </PublishedBadge>
                       ) : (
                         <PublishButton
+                          type="button"
                           onClick={() => handlePublicar(grupo.eventoId)}
                           onMouseMove={handleMouseMove}
                           disabled={publicando === grupo.eventoId}
                         >
-                          <FaPaperPlane />
+                          <FaPaperPlane aria-hidden="true" />
                           <span>
                             {publicando === grupo.eventoId
                               ? "Publicando..."
@@ -279,10 +281,13 @@ export default function Mat() {
         </Content>
 
         <Fab
+          type="button"
           onClick={() => setFormVisible(true)}
           onMouseMove={handleMouseMove}
+          aria-label="Adicionar nota"
+          title="Adicionar nota"
         >
-          <FaPlus />
+          <FaPlus aria-hidden="true" />
         </Fab>
 
         <NotaForm
@@ -304,6 +309,7 @@ export default function Mat() {
 
             <Buttons>
               <CancelButton
+                type="button"
                 onClick={() => setShowLogoutModal(false)}
                 onMouseMove={handleMouseMove}
               >
@@ -311,6 +317,7 @@ export default function Mat() {
               </CancelButton>
 
               <DeleteButton
+                type="button"
                 onClick={handleLogout}
                 onMouseMove={handleMouseMove}
               >
@@ -332,6 +339,7 @@ export default function Mat() {
 
             <Buttons>
               <CancelButton
+                type="button"
                 onClick={() => setDeleteModal(false)}
                 onMouseMove={handleMouseMove}
               >
@@ -339,6 +347,7 @@ export default function Mat() {
               </CancelButton>
 
               <DeleteButton
+                type="button"
                 onClick={confirmDelete}
                 onMouseMove={handleMouseMove}
               >
