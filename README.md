@@ -26,22 +26,22 @@ Diante disso, desenvolveu-se o sistema web Slam ETECAMP, que centraliza as infor
  ![Tela TV](design/img/tvOrganizador.png)
 
 ## Como executar o projeto (passo-a-passo) 
-Extrair o arquivo zip;
-Entrar no editor de código (exemplo: VS Code)
-Abrir a pasta SlamEtecamp-main extraída (Arquivo → Abrir Pasta);
-Abrir o terminal (Terminal → Novo Terminal) e digitar:
-cd SlamEtecamp-main
-cd backend
-npm install
-node index.js → para rodar o backend
+- Extrair o arquivo zip;
+- Entrar no editor de código (exemplo: VS Code)
+- Abrir a pasta SlamEtecamp-main extraída (Arquivo → Abrir Pasta);
+- Abrir o terminal (Terminal → Novo Terminal) e digitar:
+- cd SlamEtecamp-main
+- cd backend
+- npm install
+- node index.js → para rodar o backend
 Não fechar esse terminal
 
-Abrir outro terminal (botão + no painel do terminal) e digitar:
-cd SlamEtecamp-main
-npm install
-npm run dev → para rodar o site
-O terminal vai mostrar um link 
-copiar o link e colar no navegador
+- Abrir outro terminal (botão + no painel do terminal) e digitar:
+- cd SlamEtecamp-main
+- npm install
+- npm run dev → para rodar o site
+- O terminal vai mostrar um link 
+- copiar o link e colar no navegador
 
 Obs: o backend e o site precisam estar rodando ao mesmo tempo. O npm install só precisa ser feito na primeira vez.
  
