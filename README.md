@@ -29,7 +29,9 @@ Diante disso, desenvolveu-se o sistema web Slam ETECAMP, que centraliza as infor
 - Extrair o arquivo zip;
 - Entrar no editor de código (exemplo: VS Code)
 - Abrir a pasta SlamEtecamp-main extraída (Arquivo → Abrir Pasta);
-- Abrir o terminal (Terminal → Novo Terminal) e digitar:
+
+Abrir o terminal (Terminal → Novo Terminal) e digitar:
+
 - cd SlamEtecamp-main
 - cd backend
 - npm install
