@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import {
@@ -68,6 +69,15 @@ import {
   Time,
   FinalScore,
   RankingEmpty,
+  CriteriaBox,
+  CriteriaHeader,
+  CriteriaTitle,
+  CriteriaDescription,
+  CriteriaGrid,
+  CriteriaItem,
+  CriteriaItemTitle,
+  CriteriaItemText,
+  CriteriaHighlight,
   YearsWrapper,
   YearsContainer,
   YearArrow,
@@ -254,9 +264,7 @@ export default function EventosUsuario() {
 
         {erro && <ErrorText>{erro}</ErrorText>}
 
-        {/* ====================================================
-            BLOCO: ANO DOS EVENTOS
-        ==================================================== */}
+        {/* BLOCO: ANO DOS EVENTOS */}
         <BlocoPagina
           icone={<FiCalendar />}
           titulo="Ano dos eventos"
@@ -319,9 +327,7 @@ export default function EventosUsuario() {
           </YearsWrapper>
         </BlocoPagina>
 
-        {/* ====================================================
-            BLOCO: LISTA DE EVENTOS
-        ==================================================== */}
+        {/* BLOCO: LISTA DE EVENTOS */}
         <BlocoPagina
           icone={<FiList />}
           titulo={`Eventos de ${anoSelecionado}`}
@@ -413,9 +419,7 @@ export default function EventosUsuario() {
         </BlocoPagina>
       </Content>
 
-      {/* ======================================================
-          MODAL DO EVENTO
-      ====================================================== */}
+      {/* MODAL DO EVENTO */}
       {eventoSelecionado && (
         <ModalOverlay
           onClick={(event) => {
@@ -584,6 +588,77 @@ export default function EventosUsuario() {
                   </RankingTable>
                 </RankingTableWrapper>
               )}
+
+              <CriteriaBox>
+                <CriteriaHeader>
+                  <BlocoIcone>
+                    <FiInfo />
+                  </BlocoIcone>
+                  <div>
+                    <CriteriaTitle>Critérios de avaliação</CriteriaTitle>
+                    <CriteriaDescription>
+                      Entenda como as notas e o tempo influenciam o resultado dos poetas.
+                    </CriteriaDescription>
+                  </div>
+                </CriteriaHeader>
+
+                <CriteriaGrid>
+                  <CriteriaItem>
+                    <CriteriaItemTitle>Notas dos jurados (N1 a N5)</CriteriaItemTitle>
+                    <CriteriaItemText>
+                      Cada nota corresponde à pontuação atribuída por um dos cinco jurados.
+                    </CriteriaItemText>
+                  </CriteriaItem>
+
+                  <CriteriaItem>
+                    <CriteriaItemTitle>Média</CriteriaItemTitle>
+                    <CriteriaItemText>
+                      É a média das cinco notas recebidas pelo poeta.
+                    </CriteriaItemText>
+                  </CriteriaItem>
+
+                  <CriteriaItem>
+                    <CriteriaItemTitle>Tempo de apresentação</CriteriaItemTitle>
+                    <CriteriaItemText>
+                      O tempo limite para cada apresentação é de 3 minutos. O poeta pode
+                      apresentar um texto mais curto, sem precisar ocupar todo esse tempo.
+                    </CriteriaItemText>
+                  </CriteriaItem>
+
+                  <CriteriaItem>
+                    <CriteriaItemTitle>Tolerância</CriteriaItemTitle>
+                    <CriteriaItemText>
+                      Há uma tolerância de 10 segundos após os 3 minutos. Até 3min10s,
+                      não há desconto na pontuação.
+                    </CriteriaItemText>
+                  </CriteriaItem>
+
+                  <CriteriaItem>
+                    <CriteriaItemTitle>Desconto por tempo</CriteriaItemTitle>
+                    <CriteriaItemText>
+                      A partir de 3min11s, são descontados 0,5 ponto da nota final.
+                      A cada novo intervalo de 10 segundos excedidos, é aplicado mais
+                      0,5 ponto de desconto.
+                    </CriteriaItemText>
+                  </CriteriaItem>
+
+                  <CriteriaItem>
+                    <CriteriaItemTitle>Nota final</CriteriaItemTitle>
+                    <CriteriaItemText>
+                      É o resultado da média dos jurados após a aplicação dos descontos
+                      por tempo, quando houver.
+                    </CriteriaItemText>
+                  </CriteriaItem>
+                </CriteriaGrid>
+
+                <CriteriaHighlight>
+                  <FiClock />
+                  <span>
+                    Exemplos: 3min11s = desconto de 0,5 ponto; 3min21s = desconto
+                    total de 1,0 ponto; 3min31s = desconto total de 1,5 ponto.
+                  </span>
+                </CriteriaHighlight>
+              </CriteriaBox>
             </BlocoPagina>
           </Modal>
         </ModalOverlay>
