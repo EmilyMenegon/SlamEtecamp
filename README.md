@@ -37,7 +37,7 @@ node index.js → para rodar o backend
 Não fechar esse terminal
 
 Abrir outro terminal (botão + no painel do terminal) e digitar:
-cd SlamEtecamp
+cd SlamEtecamp-main
 npm install
 npm run dev → para rodar o site
 O terminal vai mostrar um link 
