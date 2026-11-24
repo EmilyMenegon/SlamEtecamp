@@ -34,9 +34,11 @@ Diante disso, desenvolveu-se o sistema web Slam ETECAMP, que centraliza as infor
 - cd backend
 - npm install
 - node index.js → para rodar o backend
+
 Não fechar esse terminal
 
-- Abrir outro terminal (botão + no painel do terminal) e digitar:
+Abrir outro terminal (botão + no painel do terminal) e digitar:
+
 - cd SlamEtecamp-main
 - npm install
 - npm run dev → para rodar o site
