@@ -1,4 +1,4 @@
-# Título do Projeto e a logo  
+# Projeto SlamEtecamp
 Desenvolvimento de um sistema web para apoiar a organização do evento Slam Interescolar na ETEC de Campo Limpo Paulista.
  
  ![Logo](design/img/logotipo.jpeg)
